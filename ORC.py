@@ -1,3 +1,8 @@
+# Copyright of the Board of Trustees of Columbia University in the City of New York
+
+"""
+Methods for ORC (Off-Resonance Correction)
+"""
 import numpy.fft as npfft
 import numpy as np
 import pynufft
@@ -8,6 +13,27 @@ from math import ceil
 from math import pi
 
 def add_or(M, kt, df, nonCart = None, params = None):
+    '''Adds off-resonance
+
+    Parameters
+    ----------
+    M : numpy.ndarray
+        Image data
+    kt : numpy.ndarray
+        k-space trajectory
+    df : numpy.ndarray
+        Field map
+    nonCart : , optional
+        Cartesian/Non-Cartesian trajectory option. Default is None.
+    params : dict
+        Sequence parameters. Default is None.
+
+    Returns
+    -------
+    M_or : numpy.ndarray
+        Off-resonance corrupted image data
+    '''
+
     '''Create a phase matrix - 2*pi*df*t for every df and every t'''
     if nonCart is not None:
         cartesian_opt = 0
@@ -65,6 +91,23 @@ def add_or_CPR(M, kt, df, nonCart = None, params = None):
     return M_or, kspsave
 
 def orc(M, kt, df):
+    '''Off-resonance correction for Cartesian trajectories
+
+    Parameters
+    ----------
+    M : numpy.ndarray
+        Cartesian k-space data
+    kt : numpy.ndarray
+        Cartesian k-space trajectory
+    df : numpy.ndarray
+        Field map
+
+    Returns
+    -------
+    M_hat : numpy.ndarray
+        Off-resonance corrected image data
+    '''
+
     kspace = npfft.fftshift(npfft.fft2(M))
     M_hat = np.zeros(M.shape, dtype=complex)
     for x in range(M.shape[0]):
@@ -77,6 +120,26 @@ def orc(M, kt, df):
     return M_hat
 
 def CPR(kspace, kt, df, nonCart = None, params = None, M = None):
+    '''Off-resonance Correction by Conjugate Phase Reconstruction
+
+    Parameters
+    ----------
+    kspace : numpy.ndarray
+        k-space data
+    kt : numpy.ndarray
+        k-space trajectory
+    nonCart : , optional
+        Cartesian/Non-Cartesian trajectory option. Default is None.
+    params : dict
+        Sequence parameters. Default is None.
+    M : numpy.ndarray
+        Image data. Default is None.
+
+    Returns
+    -------
+    M_hat : numpy.ndarray
+        Corrected image data.
+    '''
 
     if nonCart is not None:
         cartesian_opt = 0
@@ -110,19 +173,50 @@ def CPR(kspace, kt, df, nonCart = None, params = None, M = None):
     plt.show()'''
     return M_hat
 
-def fs_CPR(rawData, kt, df, params, M_fwd=None):
+def fs_CPR(dataIn, dataInType, kt, df, Lx, params, rawData=None, M_fwd=None):
+    '''Off-resonance Correction by frequency-segmented Conjugate Phase Reconstruction
+
+    Parameters
+    ----------
+    dataIn : numpy.ndarray
+        k-space raw data or image data
+    dataInType : str
+        Can be either 'raw' or 'im'
+    kt : numpy.ndarray
+        k-space trajectory
+    df : numpy.ndarray
+        Field map
+    Lx : int
+        L (frequency bins) factor
+    params : dict
+        Sequence parameters. Default is None.
+    M_fwd : numpy.ndarray
+        Image data. Default is None.
+
+    Returns
+    -------
+    M_hat : numpy.ndarray
+        Corrected image data.
+    '''
     cartesian_opt = 0
     # pyNUFFT object
     NufftObj = nufft_init(kt, params)
 
-    if M_fwd is not None:
-        rawData = im2ksp(M_fwd, cartesian_opt, NufftObj, params)
-
+    if dataInType == 'im':
+        if dataIn.shape[0] != dataIn.shape[1]:
+            raise ValueError('Data dimensions do not agree with expected image dimensions')
+        rawData = im2ksp(dataIn, cartesian_opt, NufftObj, params)
+    elif dataInType == 'raw':
+        if dataIn.shape[0] != kt.shape[0] or  dataIn.shape[1] != kt.shape[1]:
+            raise ValueError('Data dimensions do not agree with expected dimensions (same as ktraj)')
+        rawData = dataIn
+    else:
+        raise ValueError('The type of input data should be either raw or im')
 
     # Number of frequency segments
     df_max = max(np.abs([df.max(),df.min()])) # Hz
     L = ceil(4*df_max*2*pi*params['t_readout']/pi)
-    # L= L*2
+    L= L * Lx
     f_L = np.linspace(df.min(),df.max(),L+1) # Hz
 
     T = np.tile(params['t_vector'], (1, kt.shape[1]))
@@ -157,15 +251,46 @@ def fs_CPR(rawData, kt, df, params, M_fwd=None):
 
     return M_hat
 
-def MFI(rawData, kt, df, params, M=None):
+def MFI(dataIn, dataInType, kt, df, Lx, params):
+    '''Off-resonance Correction by Multi-Frequency Interpolation
 
+    Parameters
+    ----------
+    dataIn : numpy.ndarray
+        k-space raw data or image data
+    dataInType : str
+        Can be either 'raw' or 'im'
+    kt : numpy.ndarray
+        k-space trajectory
+    df : numpy.ndarray
+        Field map
+    Lx : int
+        L (frequency bins) factor
+    params : dict
+        Sequence parameters. Default is None.
+    M : numpy.ndarray
+        Image data. Default is None.
+
+    Returns
+    -------
+    M_hat : numpy.ndarray
+        Corrected image data.
+    '''
     cartesian_opt = 0
 
     # pyNUFFT object
     NufftObj = nufft_init(kt, params)
 
-    if M is not None:
-        rawData= im2ksp(M, cartesian_opt, NufftObj, params)
+    if dataInType == 'im':
+        if dataIn.shape[0] != dataIn.shape[1]:
+            raise ValueError('Data dimensions do not agree with expected image dimensions')
+        rawData = im2ksp(dataIn, cartesian_opt, NufftObj, params)
+    elif dataInType == 'raw':
+        if dataIn.shape[0] != kt.shape[0] or dataIn.shape[1] != kt.shape[1]:
+            raise ValueError('Data dimensions do not agree with expected dimensions (same as ktraj)')
+        rawData = dataIn
+    else:
+        raise ValueError('The type of input data should be either raw or im')
 
 
     df = np.round(df,1)
@@ -176,7 +301,7 @@ def MFI(rawData, kt, df, params, M=None):
     df_max = max(np.abs([df.max(),df.min()]))  # Hz
     df_range = (df.min(), df.max())
     L = ceil(df_max * 2 * pi * params['t_readout'] / pi)
-    # L=L*2
+    L = L * Lx
     f_L = np.linspace(df.min(), df.max(), L + 1)  # Hz
 
     T = np.tile(params['t_vector'], (1, kt.shape[1]))
@@ -203,29 +328,87 @@ def MFI(rawData, kt, df, params, M=None):
 
 
 
-def im2ksp(M, cartesian_opt, NufftObj, params):
+def im2ksp(M, cartesian_opt, NufftObj=None, params=None):
+    '''Image to k-space transformation
+
+    Parameters
+    ----------
+    M : numpy.ndarray
+        Image data
+    cartesian_opt : int
+        Cartesian = 1, Non-Cartesian = 0.
+    NufftObj : pynufft.linalg.nufft_cpu.NUFFT_cpu
+        Non-uniform FFT Object for non-cartesian transformation. Default is None.
+    params : dict
+        Sequence parameters. Default is None.
+
+    Returns
+    -------
+    kspace : numpy.ndarray
+        k-space data
+    '''
+
     if cartesian_opt == 1:
+
         kspace = npfft.fftshift(npfft.fft2(M))
     elif cartesian_opt == 0:
         # Sample phantom along ktraj
+        if 'Npoints' not in params:
+            raise ValueError('The number of acquisition points is missing')
+        if 'Nshots' not in params:
+            raise ValueError('The number of shots is missing')
         kspace = NufftObj.forward(M).reshape((params['Npoints'], params['Nshots']))  # sampled image
-
+    else:
+        raise ValueError('Cartesian option should be either 0 or 1')
     return kspace
 
-def ksp2im(ksp, cartesian_opt, NufftObj, params):
+def ksp2im(ksp, cartesian_opt, NufftObj=None, params=None):
+    '''K-space to image transformation
+
+    Parameters
+    ----------
+    ksp : numpy.ndarray
+        K-space data
+    cartesian_opt : int
+        Cartesian = 1, Non-Cartesian = 0.
+    NufftObj : pynufft.linalg.nufft_cpu.NUFFT_cpu
+        Non-uniform FFT Object for non-cartesian transformation. Default is None.
+    params : dict
+        Sequence parameters. Default is None.
+
+    Returns
+    -------
+    im : numpy.ndarray
+        Image data
+    '''
     if cartesian_opt == 1:
         im = npfft.ifft2(ksp)
     elif cartesian_opt == 0:
-        ksp_dcf = ksp.reshape((params['Npoints']*params['Nshots'],1))#*params['dcf']
-        #im = NufftObj.adjoint(ksp_dcf)
-        im = NufftObj.solve(ksp_dcf, solver='cg', maxiter=50)
+        ksp_dcf = ksp.reshape((params['Npoints']*params['Nshots'],))*params['dcf']
+        im = NufftObj.adjoint(ksp_dcf)
+
+        #im = NufftObj.solve(ksp_dcf, solver='cg', maxiter=50)
+    else:
+        raise ValueError('Cartesian option should be either 0 or 1')
+
     return im
 
 def nufft_init(kt, params):
+    '''Initializes the Non-uniform FFT object
 
-    kt = kt#*params['N']#params['FOV']
-    '''plt.plot(kt.real,kt.imag)
-    plt.show()'''
+    Parameters
+    ----------
+    kt : numpy.ndarray
+        K-space trajectory
+    params : dict
+        Sequence parameters.
+
+    Returns
+    -------
+    NufftObj : pynufft.linalg.nufft_cpu.NUFFT_cpu
+        Non-uniform FFT Object for non-cartesian transformation
+    '''
+
     om = np.zeros((params['Npoints'] * params['Nshots'], 2))
     om[:, 0] = np.real(kt).flatten()
     om[:, 1] = np.imag(kt).flatten()
@@ -239,17 +422,48 @@ def nufft_init(kt, params):
     return NufftObj
 
 def find_nearest(array,value):
+    '''Finds the index of the value's closest array element
+
+    Parameters
+    ----------
+    array : numpy.ndarray
+        Array of values
+    value : float
+        Value for which the closest element has to be found
+
+    Returns
+    -------
+    idx : int
+        Index of the closest element of the array
+    '''
     array = np.asarray(array)
     idx = (np.abs(array - value)).argmin()
     return idx
 
 def coeffs_MFI_lsq(kt, f_L, df_range,params):
+    '''Finds the coefficients for Multi-frequency interpolation method by least squares approximation.
 
+    Parameters
+    ----------
+    kt : numpy.ndarray
+        K-space trajectory
+    f_L : numpy.ndarray
+        Frequency segments array.
+    df_range :
+        Frequency range of the field map (minimum and maximum).
+    params : dict
+        Sequence parameters.
+
+    Returns
+    -------
+    cL : dict
+        Coefficients look-up-table.
+    '''
     fs = 0.1 # Hz
     f_sampling = np.round(np.arange(df_range[0], df_range[1]+fs, fs),1)
 
 
-    T = params['t_vector'][:,0]# specific to siemens, might have to change it. Also consider starting at TE
+    T = params['t_vector'][:,0] # specific to siemens, might have to change it. Also consider starting at TE
 
     A = np.zeros((kt.shape[0], f_L.shape[0]), dtype=complex)
     for l in range(f_L.shape[0]):
@@ -267,7 +481,7 @@ def coeffs_MFI_lsq(kt, f_L, df_range,params):
     return cL
 
 def polynomial_fit(df,M):
-
+    ''' Deprecated '''
     S = 0
     S_x = 0
     S_y = 0
