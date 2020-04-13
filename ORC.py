@@ -7,7 +7,7 @@ import numpy.fft as npfft
 import numpy as np
 import pynufft
 import matplotlib.pyplot as plt
-from math import ceil
+from math import ceil, sqrt
 
 
 from math import pi
@@ -51,7 +51,7 @@ def add_or(M, kt, df, nonCart = None, params = None):
         for y in range(M.shape[1]):
             phi = 2*pi*df[x,y]*kt
             kspace_orc = kspace*np.exp(-1j*phi)
-            M_corr = ksp2im(kspace_orc, kt, cartesian_opt, NufftObj, params)
+            M_corr = ksp2im(kspace_orc, cartesian_opt, NufftObj, params)
             M_or[x,y] = M_corr[x,y]
 
     return M_or
@@ -70,12 +70,12 @@ def add_or_CPR(M, kt, df, nonCart = None, params = None):
     kspace = im2ksp(M, cartesian_opt, NufftObj, params)
 
     df_values = np.unique(df)
-    T = np.tile(params['t_vector'], (1, kt.shape[1]))
+    T = np.tile(params['t_vector'],(1, kt.shape[1]))
     M_or_CPR = np.zeros((M.shape[0], M.shape[1], len(df_values)), dtype=complex)
     kspsave= np.zeros((params['Npoints'],params['Nshots'],len(df_values)),dtype=complex)
     for i in range(len(df_values)):
-        phi = 2 * pi* df_values[i] * T
-        kspace_or= kspace * np.exp(-1j * phi)
+        phi = - 2 * pi* df_values[i] * T
+        kspace_or= kspace * np.exp(1j * phi)
         kspsave[:,:,i] = kspace_or
         M_corr = ksp2im(kspace_or, cartesian_opt, NufftObj, params)
         M_or_CPR[:, :, i] = M_corr
@@ -384,8 +384,11 @@ def ksp2im(ksp, cartesian_opt, NufftObj=None, params=None):
     if cartesian_opt == 1:
         im = npfft.ifft2(ksp)
     elif cartesian_opt == 0:
-        ksp_dcf = ksp.reshape((params['Npoints']*params['Nshots'],))*params['dcf']
-        im = NufftObj.adjoint(ksp_dcf)
+        if 'dcf' in params:
+            ksp_dcf = ksp.reshape((params['Npoints']*params['Nshots'],))*params['dcf']
+        else:
+            ksp_dcf = ksp.reshape((params['Npoints'] * params['Nshots'],))
+        im = NufftObj.adjoint(ksp_dcf) #* np.prod(sqrt(4 * params['N'] ** 2))
 
         #im = NufftObj.solve(ksp_dcf, solver='cg', maxiter=50)
     else:
@@ -437,7 +440,12 @@ def find_nearest(array,value):
         Index of the closest element of the array
     '''
     array = np.asarray(array)
-    idx = (np.abs(array - value)).argmin()
+    diff = array - value
+    if value >= 0:
+        idx = np.abs(diff).argmin()
+    else:
+        idx = np.abs(diff[array < 1]).argmin()
+
     return idx
 
 def coeffs_MFI_lsq(kt, f_L, df_range,params):
@@ -462,17 +470,18 @@ def coeffs_MFI_lsq(kt, f_L, df_range,params):
     fs = 0.1 # Hz
     f_sampling = np.round(np.arange(df_range[0], df_range[1]+fs, fs),1)
 
-
-    T = params['t_vector'][:,0] # specific to siemens, might have to change it. Also consider starting at TE
-
+    alpha = 1.2 #
+    t_limit = params['t_vector'][-1] # TE + Tacq
+    T = np.linspace(0, alpha * t_limit, params['Npoints']).reshape(-1, )# specific to siemens, might have to change it
+    # T = params['t_vector'][:,0]
     A = np.zeros((kt.shape[0], f_L.shape[0]), dtype=complex)
     for l in range(f_L.shape[0]):
         phi = 2*pi*f_L[l]*T
-        A[:, l] = np.exp(-1j *phi)
+        A[:, l] = np.exp(1j *phi)
 
     cL={}
     for fs in f_sampling:
-        b = np.exp(-1j* 2*pi*fs*T)
+        b = np.exp(1j* 2*pi*fs*T)
         C = np.linalg.lstsq(A, b, rcond=None)
         if fs == -0.0:
             fs = 0.0

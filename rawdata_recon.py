@@ -15,7 +15,7 @@ def b0map_recon(data_path, save = 0, plot = 0):
     ##
     # Load the raw data
     ##
-    b0_map = sio.loadmat(data_path + 'acrph_df')['b0_map'] # sio.loadmat(data_path + 'rawdata_b0map')['b0_map']
+    b0_map =  sio.loadmat(data_path + 'rawdata_b0map')['b0_map']
 
     ##
     # Acq parameters

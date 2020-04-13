@@ -1,6 +1,7 @@
 import unittest
 
 import numpy as np
+import math
 import matplotlib.pyplot as plt
 import ORC
 
@@ -12,7 +13,9 @@ cart_ksp = np.load('test_data/slph_cart_ksp.npy')
 
 # Non-Cartesian data
 
-ktraj = np.load('test_data/ktraj_noncart.npy')/80
+ktraj = np.load('test_data/ktraj_noncart.npy')# /80
+ktraj_sc = math.pi / abs(np.max(ktraj))
+ktraj = ktraj * ktraj_sc
 ktraj_dcf = np.load('test_data/ktraj_noncart_dcf.npy').flatten()
 
 noncart_ksp = np.load('test_data/slph_noncart_ksp.npy')

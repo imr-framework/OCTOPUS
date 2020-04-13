@@ -50,22 +50,22 @@ seq_params = {'FOV': FOV, 'N': N, 'Npoints': Npoints, 'Nshots': Nshots, 'dcf': d
 ##
 # Plot the original data
 ##
-spiral_recon(data_path, ktraj, N, plot=1)
+# spiral_recon(data_path, ktraj, N, plot=1)
 
 ##
 # Off resonance correction
 ##
-Lx = 2
+Lx = 3
 if Lx < 1:
     raise ValueError('The L factor cannot be lower that 1 (minimum L)')
 fsCPR_result = np.zeros((N, N, Nslices, Nchannels), dtype=complex)
 MFI_result = np.zeros((N, N, Nslices, Nchannels), dtype=complex)
 for ch in range(Nchannels):
     for sl in range(Nslices):
-        fsCPR_result[:, :, sl, ch] = ORC.fs_CPR(np.squeeze(rawdata[:, :, sl, ch]), ktraj, np.squeeze(b0map[:, :, sl]), Lx, seq_params)
+        fsCPR_result[:, :, sl, ch] = ORC.fs_CPR(np.squeeze(rawdata[:, :, sl, ch]),'raw', ktraj, np.squeeze(b0map[:, :, sl]), Lx, seq_params)
         print('fsCPR: Done with slice:' + str(sl + 1) + ', channel:' + str(ch + 1))
         np.save(data_path + 'fsCPR_Lx' + str(Lx), fsCPR_result)
-        MFI_result[:, :, sl, ch] = ORC.MFI(np.squeeze(rawdata[:, :, sl, ch]), ktraj, np.squeeze(b0map[:, :, sl]), Lx, seq_params)
+        MFI_result[:, :, sl, ch] = ORC.MFI(np.squeeze(rawdata[:, :, sl, ch]),'raw', ktraj, np.squeeze(b0map[:, :, sl]), Lx, seq_params)
         print('MFI: Done with slice:' + str(sl + 1) + ', channel:' + str(ch + 1))
         np.save(data_path + 'MFI_Lx' + str(Lx), MFI_result)
 
