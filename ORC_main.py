@@ -6,6 +6,7 @@ Last modified: 03/02/2020
 import scipy.io as sio
 import numpy as np
 import matplotlib.pyplot as plt
+import math
 
 from rawdata_recon import b0map_recon
 from rawdata_recon import spiral_recon
@@ -42,7 +43,10 @@ Nchannels = rawdata.shape[-1]
 if len(rawdata.shape) < 4:
     rawdata = rawdata.reshape(Npoints, Nshots, 1, Nchannels)
 Nslices = rawdata.shape[2]
-ktraj = ktraj / 80 # Scaling factor (pyNUFFT)
+# Scaling factor (pyNUFFT) [-pi, pi]
+ktraj_sc = math.pi / abs(np.max(ktraj))
+ktraj = ktraj * ktraj_sc
+
 t_ro = Npoints * 10e-6 # read-out time, hard-coded for Siemens-Pulseq
 T = np.linspace(4.6e-3, 4.6e-3 + t_ro, Npoints).reshape((Npoints, 1))
 seq_params = {'FOV': FOV, 'N': N, 'Npoints': Npoints, 'Nshots': Nshots, 'dcf': dcf, 't_vector': T, 't_readout': t_ro}
