@@ -3,7 +3,7 @@ import cv2
 import math
 import matplotlib.pyplot as plt
 
-import Recon.ORC as ORC
+import OCTOPUS.ORC as ORC
 
 def fieldmap_bin(field_map: np.ndarray, bin : int):
     '''

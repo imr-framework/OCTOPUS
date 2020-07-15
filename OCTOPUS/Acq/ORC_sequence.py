@@ -1,4 +1,7 @@
+# Copyright of the Board of Trustees of Columbia University in the City of New York
+
 '''
+Creates the spiral .seq file to run on the scanner.
 Author: Marina Manso Jimeno
 Last modified: 02/26/2020
 '''

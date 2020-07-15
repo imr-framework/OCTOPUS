@@ -1,8 +1,10 @@
 # Copyright of the Board of Trustees of Columbia University in the City of New York
+'''
+Methods for ORC (Off-Resonance Correction) and off-resonance simulation
+Author: Marina Manso Jimeno
+Last updated: 07/14/2020
+'''
 
-"""
-Methods for ORC (Off-Resonance Correction)
-"""
 import numpy.fft as npfft
 import numpy as np
 import pynufft
@@ -13,7 +15,7 @@ from math import ceil, sqrt
 from math import pi
 
 def add_or(M, kt, df, nonCart = None, params = None):
-    '''Adds off-resonance
+    '''Forward model for off-resonance simulation
 
     Parameters
     ----------
@@ -23,9 +25,9 @@ def add_or(M, kt, df, nonCart = None, params = None):
         k-space trajectory
     df : numpy.ndarray
         Field map
-    nonCart : , optional
+    nonCart : int , optional
         Cartesian/Non-Cartesian trajectory option. Default is None.
-    params : dict
+    params : dict , optional
         Sequence parameters. Default is None.
 
     Returns
@@ -57,7 +59,27 @@ def add_or(M, kt, df, nonCart = None, params = None):
     return M_or
 
 def add_or_CPR(M, kt, df, nonCart = None, params = None):
-    '''Create a phase matrix - 2*pi*df*t for every df and every t'''
+    '''Forward model for off-resonance simulation. The number of fourier transforms = number of unique values in the field map.
+
+    Parameters
+    ----------
+    M : numpy.ndarray
+        Image data
+    kt : numpy.ndarray
+        k-space trajectory
+    df : numpy.ndarray
+        Field map
+    nonCart : int , optional
+        Cartesian/Non-Cartesian trajectory option. Default is None.
+    params : dict , optional
+        Sequence parameters. Default is None.
+
+    Returns
+    -------
+    M_or : numpy.ndarray
+        Off-resonance corrupted image data
+    '''
+    # Create a phase matrix - 2*pi*df*t for every df and every t
     if nonCart is not None:
         cartesian_opt = 0
         NufftObj = nufft_init(kt, params)
@@ -120,7 +142,8 @@ def orc(M, kt, df):
             M_hat[x, y] = M_corr[x, y]
 
     return M_hat
-def CPR(dataIn : np.ndarray, dataInType : str, kt : np.ndarray, df : np.ndarray, nonCart : int =None, params : dict =None):
+
+def CPR(dataIn, dataInType, kt, df, nonCart=None, params=None):
     '''Off-resonance Correction by Conjugate Phase Reconstruction
 
     Parameters
@@ -136,7 +159,7 @@ def CPR(dataIn : np.ndarray, dataInType : str, kt : np.ndarray, df : np.ndarray,
     nonCart : int
         Non-cartesian trajectory option. Default is None (Cartesian).
     params : dict
-        Sequence parameters. Default is None.
+        Sequence parameters. Default is None (Cartesian).
 
     Returns
     -------
@@ -183,7 +206,7 @@ def CPR(dataIn : np.ndarray, dataInType : str, kt : np.ndarray, df : np.ndarray,
 
     return M_hat
 
-def fs_CPR(dataIn : np.ndarray, dataInType : str, kt : np.ndarray, df : np.ndarray, Lx : int, nonCart : int = None, params : dict = None):
+def fs_CPR(dataIn, dataInType, kt, df, Lx, nonCart= None, params= None):
     '''Off-resonance Correction by frequency-segmented Conjugate Phase Reconstruction
 
     Parameters
@@ -201,7 +224,7 @@ def fs_CPR(dataIn : np.ndarray, dataInType : str, kt : np.ndarray, df : np.ndarr
     nonCart : int
         Non-cartesian trajectory option. Default is None (Cartesian).
     params : dict
-        Sequence parameters. Default is None.
+        Sequence parameters. Default is None (Cartesian).
 
     Returns
     -------
@@ -270,8 +293,7 @@ def fs_CPR(dataIn : np.ndarray, dataInType : str, kt : np.ndarray, df : np.ndarr
 
     return M_hat
 
-def MFI(dataIn : np.ndarray, dataInType : str, kt : np.ndarray, df : np.ndarray, Lx : int, nonCart : int = None, params : dict = None):
-    # TODO: support cartesian
+def MFI(dataIn, dataInType, kt , df, Lx , nonCart= None, params= None):
     '''Off-resonance Correction by Multi-Frequency Interpolation
 
     Parameters
@@ -355,8 +377,6 @@ def MFI(dataIn : np.ndarray, dataInType : str, kt : np.ndarray, df : np.ndarray,
 
     return M_hat
 
-
-
 def im2ksp(M, cartesian_opt, NufftObj=None, params=None):
     '''Image to k-space transformation
 
@@ -412,7 +432,7 @@ def ksp2im(ksp, cartesian_opt, NufftObj=None, params=None):
     '''
     if cartesian_opt == 1:
         im = npfft.ifft2(npfft.fftshift(ksp))
-        #im = npfft.ifft2(ksp)
+
     elif cartesian_opt == 0:
         if 'dcf' in params:
             ksp_dcf = ksp.reshape((params['Npoints']*params['Nshots'],))*params['dcf']
@@ -443,7 +463,8 @@ def nufft_init(kt, params):
     NufftObj : pynufft.linalg.nufft_cpu.NUFFT_cpu
         Non-uniform FFT Object for non-cartesian transformation
     '''
-
+    kt_sc = pi / abs(np.max(kt))
+    kt = kt * kt_sc # pyNUFFT scaling [-pi, pi]
     om = np.zeros((params['Npoints'] * params['Nshots'], 2))
     om[:, 0] = np.real(kt).flatten()
     om[:, 1] = np.imag(kt).flatten()
@@ -456,7 +477,7 @@ def nufft_init(kt, params):
     NufftObj.plan(om, Nd, Kd, Jd)
     return NufftObj
 
-def find_nearest(array,value):
+def find_nearest(array, value):
     '''Finds the index of the value's closest array element
 
     Parameters
@@ -480,7 +501,7 @@ def find_nearest(array,value):
 
     return idx
 
-def coeffs_MFI_lsq(kt : np.ndarray, f_L : np.ndarray, df_range : tuple, t_vector : np.ndarray):
+def coeffs_MFI_lsq(kt, f_L, df_range, t_vector):
     '''Finds the coefficients for Multi-frequency interpolation method by least squares approximation.
 
     Parameters
@@ -504,10 +525,9 @@ def coeffs_MFI_lsq(kt : np.ndarray, f_L : np.ndarray, df_range : tuple, t_vector
 
     alpha = 1.2 #
     t_limit = t_vector[-1]
-    #t_limit = params['t_vector'][-1] # TE + Tacq
+
     T = np.linspace(0, alpha * t_limit, len(t_vector)).reshape(-1, )
-    #T = np.linspace(0, alpha * t_limit, params['Npoints']).reshape(-1, )# specific to siemens, might have to change it
-    # T = params['t_vector'][:,0]
+
     A = np.zeros((kt.shape[0], f_L.shape[0]), dtype=complex)
     for l in range(f_L.shape[0]):
         phi = 2 * pi * f_L[l] * T
@@ -522,55 +542,3 @@ def coeffs_MFI_lsq(kt : np.ndarray, f_L : np.ndarray, df_range : tuple, t_vector
         cL[str(fs)] = C[0][:].reshape((f_L.shape[0]))
 
     return cL
-
-def polynomial_fit(df,M):
-    ''' Deprecated '''
-    S = 0
-    S_x = 0
-    S_y = 0
-    S_f =0
-    S_xx = 0
-    S_yy = 0
-    S_xy = 0
-    S_xf = 0
-    S_yf = 0
-    for xi in range(M.shape[0]):
-        for yi in range(M.shape[1]):
-            omega = 1/np.abs(M[xi, yi])
-            S = 1/omega**2
-            S_x = xi/omega**2
-            S_y = yi/omega**2
-            S_f = df[xi,yi]/omega**2
-            S_xx = xi**2/omega**2
-            S_yy = yi ** 2 / omega ** 2
-            S_xy = xi*yi/omega**2
-            S_xf = xi * df[xi,yi] / omega ** 2
-            S_yf = yi*df[xi,yi] / omega ** 2
-
-        S += S
-        S_x += S_x
-        S_y += S_y
-        S_f += S_f
-        S_xx += S_xx
-        S_yy += S_yy
-        S_xy += S_xy
-        S_xf += S_xf
-        S_yf += S_yf
-
-    delta = np.asarray(([S, S_x, S_y], [S_x, S_xx, S_xy],[S_y, S_xy, S_yy]))
-    delta_f = np.asarray(([S_f, S_x, S_y],[S_xf, S_xx, S_xy], [S_yf, S_xy, S_yy]))
-    delta_x = np.linalg.det(np.asarray(([S, S_f, S_y],[S_x, S_xf, S_xy], [S_y, S_yf, S_yy])))
-    delta_y = np.linalg.det(np.asarray(([S, S_x, S_f], [S_x, S_xx, S_xf], [S_y, S_xy, S_yf])))
-
-
-    f_0 = delta_f/delta
-    alpha = delta_x/delta
-    beta = delta_y/delta
-
-    lin_df = np.zeros(df.shape)
-    for xi in range(df.shape[0]):
-        for yi in range(df.shape[1]):
-            lin_df[xi,yi] = f_0+alpha*xi+beta*yi
-
-
-    return lin_df

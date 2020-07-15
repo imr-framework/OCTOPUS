@@ -1,15 +1,15 @@
-
+# Copyright of the Board of Trustees of Columbia University in the City of New York
 '''
 Numerical Simulation Experiments with Cartesian trajectories
 Author: Marina Manso Jimeno
-Last updated: 07/14/2020
+Last updated: 07/15/2020
 '''
 import numpy as np
 import matplotlib.pyplot as plt
-import cv2
-import Recon.fieldmap_gen as fieldmap_gen
-import Recon.ORC as ORC
-from utils.plot_restults import plot_correction_results
+
+import OCTOPUS.utils.fieldmap.fieldmap_gen as fieldmap_gen
+import OCTOPUS.ORC as ORC
+from OCTOPUS.utils.plot_results import plot_correction_results
 
 ##
 # Original image: Shep-Logan Phantom
@@ -36,7 +36,7 @@ plt.show()
 ##
 # Simulated field map
 ##
-fmax_v = [1600, 3200, 4800] # Hz correspontig to 25, 50 and 75 ppm
+fmax_v = [1600, 3200, 4800] # Hz correspontig to 25, 50 and 75 ppm at 3T
 i = 0
 
 field_maps = np.zeros((N, N, len(fmax_v)))
@@ -45,12 +45,12 @@ or_corrected_CPR = np.zeros((N, N, len(fmax_v)), dtype='complex')
 or_corrected_fsCPR = np.zeros((N, N, len(fmax_v)), dtype='complex')
 or_corrected_MFI = np.zeros((N, N, len(fmax_v)), dtype='complex')
 for fmax in fmax_v:
-    #field_map = fieldmap_gen.realistic(np.abs(ph), fmax)
+    field_map = fieldmap_gen.realistic(np.abs(ph), fmax)
 
-    ###
-    dst = np.zeros((N,N))
+    ### For reproducibility
+    '''dst = np.zeros((N,N))
     field_map = cv2.normalize(np.load('M2.npy'), dst, -fmax, fmax, cv2.NORM_MINMAX)
-    field_map = field_map * np.load('mask.npy')
+    field_map = field_map * np.load('mask.npy')'''
     ###
 
     field_maps[:,:,i] = field_map

@@ -1,17 +1,17 @@
+# Copyright of the Board of Trustees of Columbia University in the City of New York
 '''
-Numerical Simulation Experiments
+Numerical Simulation Experiments with spiral trajectory
 Author: Marina Manso Jimeno
-Last updated: 05/26/2020
+Last updated: 07/15/2020
 '''
 import numpy as np
 import math
 import cv2
 import matplotlib.pyplot as plt
 
-import Recon.ORC as ORC
-import Recon.fieldmap_gen as fieldmap_gen
-from utils.metrics import create_table
-from utils.plot_restults import plot_correction_results
+import OCTOPUS.ORC as ORC
+import OCTOPUS.utils.fieldmap.fieldmap_gen as fieldmap_gen
+from OCTOPUS.utils.plot_results import plot_correction_results
 
 ##
 # Original image: Shep-Logan Phantom
@@ -30,8 +30,9 @@ plt.show()
 ##
 dt = 10e-6
 ktraj = np.load('../Recon/test_data/ktraj_noncart.npy') # k-space trajectory
-ktraj_sc = math.pi / abs(np.max(ktraj))
-ktraj = ktraj * ktraj_sc # pyNUFFT scaling [-pi, pi]
+#TODO: Remove the scaling
+'''ktraj_sc = math.pi / abs(np.max(ktraj))
+ktraj = ktraj * ktraj_sc # pyNUFFT scaling [-pi, pi]'''
 plt.plot(ktraj.real,ktraj.imag)
 plt.title('Spiral trajectory')
 plt.show()
@@ -53,13 +54,12 @@ or_corrected_fsCPR = np.zeros((N, N, len(fmax_v)), dtype='complex')
 or_corrected_MFI = np.zeros((N, N, len(fmax_v)), dtype='complex')
 for fmax  in fmax_v:
 
-    #field_map = fieldmap_gen.hyperbolic(N, fmax)
-    ###
-    dst = np.zeros((N, N))
+    field_map = fieldmap_gen.realistic(np.abs(ph), fmax)
+    ### For reproducibility
+    '''dst = np.zeros((N, N))
     field_map = cv2.normalize(np.load('M2.npy'), dst, -fmax, fmax, cv2.NORM_MINMAX)
     field_map = field_map * np.load('mask.npy')
-    field_map = fieldmap_gen.fieldmap_bin(field_map,5)
-
+    field_map = fieldmap_gen.fieldmap_bin(field_map,5)'''
     ###
     plt.imshow(field_map, cmap='gray')
     plt.title('Field Map +/-' + str(fmax) + ' Hz')
