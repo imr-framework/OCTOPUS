@@ -69,7 +69,7 @@ def LoG(im):
         Laplacian of a gaussian of the image
     '''
     # rotationally symmetric kernel
-    log_kernel = sio.loadmat('log_kernel.mat')['log_kernel']
+    log_kernel = sio.loadmat('../utils/log_kernel.mat')['log_kernel']
     log_im = cv2.filter2D(np.abs(im), -1, log_kernel)
 
     return log_im
@@ -121,7 +121,7 @@ def create_table(stack_of_images : np.ndarray, col_names : tuple, franges : tupl
     else:
         franges = [franges]
         nfranges = 1
-        stack_of_images = np.expand_dims(im_stack, axis=3)
+        stack_of_images = np.expand_dims(stack_of_images, axis=3)
 
     data = np.zeros((nfranges, nmetrics, nmethods))
 
@@ -152,6 +152,8 @@ def create_table(stack_of_images : np.ndarray, col_names : tuple, franges : tupl
 
     if nfranges == 1:
         table_data = np.round(data[0],2)
+        row_labels = labels
+        row_colors = colors
     else:
 
         #col_names= list(col_names)
@@ -174,7 +176,7 @@ def create_table(stack_of_images : np.ndarray, col_names : tuple, franges : tupl
                           colLabels=col_names,
                           loc='bottom')
 
-    h = the_table.get_celld()[(0, 0)].get_height()
+    '''h = the_table.get_celld()[(0, 0)].get_height()
     w = the_table.get_celld()[(0, 0)].get_width() / (nmethods + 1)
     header = [the_table.add_cell(pos, -2, w, h, loc="center", facecolor="none") for pos in range(1, nfranges * nmetrics + 1)]
     count = 0
@@ -184,7 +186,7 @@ def create_table(stack_of_images : np.ndarray, col_names : tuple, franges : tupl
         header[i+2].visible_edges = "LR"
         header[i + 1].get_text().set_text(labels[count])
         count += 1
-    header[-1].visible_edges = 'BLR'
+    header[-1].visible_edges = 'BLR'''''
 
     the_table._bbox = [0, -2, 1, 1.7]
     the_table.set_fontsize(8)

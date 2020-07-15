@@ -151,9 +151,9 @@ def realistic(im : np.ndarray, fmax : float, bin_opt : bool = True, bin_val : in
     M = np.random.rand(2, 2)
     M2 = cv2.resize(M, (N, N))
 
-    field_map_mat = M2 * mask
-    dst = np.zeros(field_map_mat.shape)
-    field_map = cv2.normalize(field_map_mat, dst, -fmax, fmax, cv2.NORM_MINMAX)
+
+    dst = np.zeros(M2.shape)
+    field_map = cv2.normalize(M2, dst, -fmax, fmax, cv2.NORM_MINMAX) * mask
 
     if bin_opt:
         field_map = fieldmap_bin(field_map, bin_val)

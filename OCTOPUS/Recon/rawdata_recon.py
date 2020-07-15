@@ -73,7 +73,7 @@ def b0map_recon(data_path, method = 'HP', save = 0, plot = 0):
         b0_map = b0_map.reshape(b0_map.shape[0], N, 1, 2, Nchannels)
     else:
 
-        Nslices = b0_map.shape[-2]
+        Nslices = b0_map.shape[2]
 
     ##
     # FT to get the echo complex images
@@ -91,7 +91,9 @@ def b0map_recon(data_path, method = 'HP', save = 0, plot = 0):
     echo1 = echo1[oversamp_factor:-oversamp_factor, :, :, :]
     echo2 = echo2[oversamp_factor:-oversamp_factor, :, :, :]
 
-    mag_im = np.sum(np.abs(echo1), 3)
+
+
+    mag_im = np.sum(np.abs(echo1), -1)
     mag_im = np.divide(mag_im, np.max(mag_im))
     brain_mask = mask_by_threshold(mag_im)
     brain_extracted = np.squeeze(mag_im) * brain_mask
@@ -148,7 +150,8 @@ def b0map_recon(data_path, method = 'HP', save = 0, plot = 0):
         np.save(data_path+'b0map', b0map)
 
     if plot:
-        plt.imshow(np.rot90(b0map[:, :, 0], -1), cmap='gray')
+        mid = math.floor(b0map.shape[-1]/2)
+        plt.imshow(np.rot90(b0map[:, :, mid], -1), cmap='gray')
         #plt.imshow(np.rot90(np.fliplr(b0map[:,:,0]), -1), cmap='gray') # rotate only for display purposes
         plt.axis('off')
         plt.title('Field Map')
@@ -164,7 +167,6 @@ def spiral_recon(data_path, ktraj, N, plot = 0):
     # Load the raw data
     ##
     dat = sio.loadmat(data_path + 'rawdata_spiral')['dat']
-
     ##
     # Acq parameters
     ##
@@ -204,12 +206,14 @@ def spiral_recon(data_path, ktraj, N, plot = 0):
         for sl in range(Nslices):
             im[:,:,sl,ch] = NufftObj.solve(dat[:,:,sl,ch].flatten(), solver='cg', maxiter=50)
 
-    sos = np.sum(np.abs(im), 2)
+    sos = np.sum(np.abs(im), -1)
     sos = np.divide(sos, np.max(sos))
+    np.save(data_path + 'uncorrected_spiral.npy', sos)
 
     if plot:
         plt.imshow(np.rot90(np.abs(sos[:,:,0]),-1), cmap='gray')
         plt.axis('off')
         plt.title('Uncorrected Image')
+        #plt.savefig('foo.png')
         plt.show()
     return

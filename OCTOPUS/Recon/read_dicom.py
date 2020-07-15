@@ -31,9 +31,9 @@ def read_dicom_gre(path):
     data = dcmread(path)
     vol = data.pixel_array
     vol = np.fliplr(vol)
-    plt.imshow(vol, cmap='gray')
+    '''plt.imshow(vol, cmap='gray')
     plt.axis('off')
-    plt.show()
+    plt.show()'''
     return vol
 fpath = r'C:\Users\marin\Documents\PhD\ORC-OSSP\Data\20200624\shim\GRE_FIELD_MAPPING_0016\fieldmap.IMA'
 #fpath = r'C:\Users\marin\Documents\PhD\ORC-OSSP\Data\20200624\shim\GRE_0015\TEST.MR.GEETHANATH_RECON.0015.0001.2020.06.24.17.46.43.518591.1430948.IMA'

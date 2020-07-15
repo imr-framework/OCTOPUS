@@ -3,7 +3,6 @@
 """
 Methods for ORC (Off-Resonance Correction)
 """
-from concurrent.futures import as_completed, ThreadPoolExecutor
 import numpy.fft as npfft
 import numpy as np
 import pynufft
@@ -74,24 +73,14 @@ def add_or_CPR(M, kt, df, nonCart = None, params = None):
 
     df_values = np.unique(df)
 
-    # Multi-threading to save precious seconds
-    with ThreadPoolExecutor() as executor:
-        M_or_CPR = []
-        kspsave = []
-        futures = []
-        for i in range(len(df_values)):
-            phi = - 2 * pi * df_values[i] * T
-            kspace_or = np.multiply(kspace, np.exp(1j * phi))
-            kspsave.append(kspace_or)
-            futures.append(executor.submit(_threaded_ksp2im, kspace_or, cartesian_opt, NufftObj, params))
-
-        for f in as_completed(futures):
-            M_or_CPR.append(f.result())
-
-        kspsave = np.stack(kspsave)
-        kspsave = np.moveaxis(kspsave, [0, 1, 2], [2, 0, 1])
-        M_or_CPR = np.stack(M_or_CPR)
-        M_or_CPR = np.moveaxis(M_or_CPR, [0, 1, 2], [2, 0, 1])
+    M_or_CPR = np.zeros((M.shape[0], M.shape[1], len(df_values)), dtype=complex)
+    #kspsave= np.zeros((params['Npoints'],params['Nshots'],len(df_values)),dtype=complex)
+    for i in range(len(df_values)):
+        phi = - 2 * pi* df_values[i] * T
+        kspace_or= kspace * np.exp(1j * phi)
+        #kspsave[:,:,i] = kspace_or
+        M_corr = ksp2im(kspace_or, cartesian_opt, NufftObj, params)
+        M_or_CPR[:, :, i] = M_corr
 
     M_or = np.zeros(M.shape, dtype=complex)
     for x in range(M.shape[0]):
