@@ -30,9 +30,6 @@ plt.show()
 ##
 dt = 10e-6
 ktraj = np.load('../Recon/test_data/ktraj_noncart.npy') # k-space trajectory
-#TODO: Remove the scaling
-'''ktraj_sc = math.pi / abs(np.max(ktraj))
-ktraj = ktraj * ktraj_sc # pyNUFFT scaling [-pi, pi]'''
 plt.plot(ktraj.real,ktraj.imag)
 plt.title('Spiral trajectory')
 plt.show()
