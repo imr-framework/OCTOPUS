@@ -10,7 +10,7 @@ changes to this document in a pull request.
 
 ## Code of Conduct
 This project and everyone participating in it is governed by the
-[`OCTOPUS` Code of Conduct](code_of_conduct).
+[`OCTOPUS` Code of Conduct](#code_of_conduct).
 By participating, you are expected to uphold this code. Please report unacceptable behavior to
 [imr.framework2018@gmail.com](email).
 
