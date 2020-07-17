@@ -7,6 +7,10 @@ OCTOPUS leverages existing techniques and outputs artifact-corrected or mitigate
 
 To learn more about the used methods and their implementation visit the API docs.
 
+## Contributing and Community guidelines
+`OCTOPUS` adheres to a code of conduct adapted from the [Contributor Covenant] code of conduct.
+Contributing guidelines can be found [here][contrib-guidelines].
+
 ## References
 1. Maeda, A., Sano, K. and Yokoyama, T. (1988), Reconstruction by weighted correlation for MRI with time-varying gradients. IEEE Transactions on Medical Imaging, 7(1): 26-31. doi: 10.1109/42.3926
 2. Noll, D. C., Pauly, J. M., Meyer, C. H., Nishimura, D. G. and Macovskj, A. (1992), Deblurring for non‐2D fourier transform magnetic resonance imaging. Magn. Reson. Med., 25: 319-333. doi:10.1002/mrm.1910250210
@@ -17,7 +21,7 @@ To learn more about the used methods and their implementation visit the API docs
 [api-docs]: https://pypulseq.readthedocs.io/en/latest
 [Bruker]: https://github.com/pulseq/bruker_interpreter
 [Contributor Covenant]: http://contributor-covenant.org
-[contrib-guidelines]: https://github.com/imr-framework/pypulseq/blob/master/CONTRIBUTING.md
+[contrib-guidelines]: https://github.com/imr-framework/OCTOPUS/blob/master/CONTRIBUTING.md
 [GE]: https://toppemri.github.io
 [google-colab]: https://colab.research.google.com/
 [installation]: #installation
