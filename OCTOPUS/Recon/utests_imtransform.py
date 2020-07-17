@@ -1,24 +1,32 @@
+# Copyright of the Board of Trustees of Columbia University in the City of New York
 import unittest
 
+import configparser
+import os
 import numpy as np
 import math
 import matplotlib.pyplot as plt
-import ORC
+import OCTOPUS.ORC as ORC
+
+# Read settings.ini configuration file
+os.chdir('../')
+path_settings = os.path.abspath('settings.ini')
+config = configparser.ConfigParser()
+config.read(path_settings)
+inputs = config['TESTING']
 
 # Cartesian data
-ph = np.load('test_data/slph_im.npy').astype(complex)
+ph = np.load(os.path.abspath(inputs['path_imdat_cart'])).astype(complex)
 ph = (ph - np.min(ph)) / (np.max(ph)-np.min(ph))
-cart_ksp = np.load('test_data/slph_cart_ksp.npy')
+cart_ksp = np.load(os.path.abspath(inputs['path_ktraj_cart']))
 
 
 # Non-Cartesian data
 
-ktraj = np.load('test_data/ktraj_noncart.npy')# /80
-ktraj_sc = math.pi / abs(np.max(ktraj))
-ktraj = ktraj * ktraj_sc
-ktraj_dcf = np.load('test_data/ktraj_noncart_dcf.npy').flatten()
+ktraj = np.load(os.path.abspath(inputs['path_ktraj_noncart']))
+ktraj_dcf = np.load(os.path.abspath(inputs['path_dcf_noncart'])).flatten()
 
-noncart_ksp = np.load('test_data/slph_noncart_ksp.npy')
+noncart_ksp = np.load(os.path.abspath(inputs['path_rawdat_sl_noncart']))
 acq_params = {'Npoints': ktraj.shape[0], 'Nshots': ktraj.shape[1], 'N': ph.shape[0], 'dcf': ktraj_dcf}
 
 

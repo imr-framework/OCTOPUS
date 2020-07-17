@@ -1,3 +1,4 @@
+# Copyright of the Board of Trustees of Columbia University in the City of New York
 '''
 Methods to calculate off-resonance correction performance metrics
 Author: Marina Manso Jimeno
@@ -104,14 +105,14 @@ def create_table(stack_of_images : np.ndarray, col_names : tuple, franges : tupl
     Parameters
     ----------
     stack_of_images : numpy.ndarray
-        stack_of_images[0] : ground truth (before correction). stack_of_images[1] : CPR corrected. stack_of_images[2] : fs-CPR corrected. stack_of_images[3] : MFI corrected.
+        stack_of_images[0] : ground truth. stack_of_images[1] : CPR corrected. stack_of_images[2] : fs-CPR corrected. stack_of_images[3] : MFI corrected.
     col_names : tuple
         Names for the columns
     franges :  tuple
         Frequency ranges of the original field map
     '''
 
-    nmetrics = 3
+    nmetrics = 2 #3
     nmethods = len(stack_of_images) - 1
 
     if len(col_names) != nmethods:
@@ -132,10 +133,10 @@ def create_table(stack_of_images : np.ndarray, col_names : tuple, franges : tupl
             corr_im = ims_fr[col + 1]
             data[fr, 0, col] = pSNR(GT, corr_im, data_range=corr_im.max() - corr_im.min())
             data[fr, 1, col] = SSIM(GT, corr_im, data_range=corr_im.max() - corr_im.min())
-            data[fr, 2, col] = HFEN(GT, corr_im)
+            #data[fr, 2, col] = HFEN(GT, corr_im)
 
     # Get some pastel shades for the colors
-    colors = plt.cm.BuPu(np.linspace(0.25, 0.7, nmetrics))
+    colors = plt.cm.BuPu(np.linspace(0.25, 0.7, nfranges))
     labels = ['pSNR', 'SSIM', 'HFEN']
     fig, ax = plt.subplots(nmetrics, 1, sharex=True)
     x = range(nmethods)
@@ -171,58 +172,29 @@ def create_table(stack_of_images : np.ndarray, col_names : tuple, franges : tupl
 
     the_table = plt.table(cellText = table_data,
                           cellLoc= 'center',
+
                           rowLabels=row_labels,
                           rowColours=row_colors,
                           colLabels=col_names,
                           loc='bottom')
 
-    '''h = the_table.get_celld()[(0, 0)].get_height()
+    h = the_table.get_celld()[(0, 0)].get_height()
     w = the_table.get_celld()[(0, 0)].get_width() / (nmethods + 1)
     header = [the_table.add_cell(pos, -2, w, h, loc="center", facecolor="none") for pos in range(1, nfranges * nmetrics + 1)]
     count = 0
-    for i in range(0, nfranges * nmetrics, nmetrics):
+    for i in range(0, nfranges * nmetrics, nmetrics +1):
         header[i].visible_edges = "TLR"
         header[i+1].visible_edges = "LR"
         header[i+2].visible_edges = "LR"
         header[i + 1].get_text().set_text(labels[count])
         count += 1
-    header[-1].visible_edges = 'BLR'''''
+    header[-1].visible_edges = 'BLR'
 
     the_table._bbox = [0, -2, 1, 1.7]
-    the_table.set_fontsize(8)
+    the_table.auto_set_font_size(False)
+    the_table.set_fontsize(10)
     the_table.scale(1.5, 1.5)
-    plt.subplots_adjust(bottom=0.35, left=0.2)
+    plt.subplots_adjust(bottom=0.45, left=0.2)
+
     fig.suptitle('Performance metrics')
     plt.show()
-
-
-'''ph = np.load('../Recon/test_data/slph_im.npy') # Shep-Logan Phantom
-#ph = sio.loadmat('test_data/sl_ph.mat')['sl_ph']
-ph = (ph - np.min(ph)) / (np.max(ph)-np.min(ph))
-ph1 = cv2.GaussianBlur(ph, (99,99),0)
-plt.subplot(121)
-plt.imshow(ph)
-plt.subplot(122)
-plt.imshow(ph1)
-plt.show()
-a = HFEN(ph1, ph)'''
-'''img = img_as_float(data.camera())
-rows, cols = img.shape
-
-noise = np.ones_like(img) * 0.2 * (img.max() - img.min())
-noise[np.random.random(size=noise.shape) > 0.5] *= -1
-img_noise = img + noise
-img_const = img + abs(noise)
-im_stack = np.stack((img, img_noise, img_const))
-cols = ('Image with noise', 'Image plus constant')
-
-create_table(im_stack, cols)'''
-'''im_stack = np.load('../Recon/im_stack22.npy')
-cols = ('CPR', 'fs-CPR', 'MFI')
-f_ranges = ('-/+ 250 Hz', '-/+ 500 Hz', '-/+ 750 Hz')'''
-
-'''im_stack = np.load('../Recon/im_stack.npy')
-cols = ('CPR', 'fs-CPR', 'MFI')
-f_ranges = ('-/+ 250 Hz')'''
-
-'''create_table(im_stack, cols, f_ranges)'''

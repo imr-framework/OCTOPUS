@@ -1,3 +1,10 @@
+# Copyright of the Board of Trustees of Columbia University in the City of New York
+'''
+Methods to simulate different types of field maps
+Author: Marina Manso Jimeno
+Last modified: 07/16/2020
+'''
+
 import numpy as np
 import cv2
 import math
@@ -159,29 +166,10 @@ def realistic(im : np.ndarray, fmax : float, bin_opt : bool = True, bin_val : in
         field_map = fieldmap_bin(field_map, bin_val)
 
     return field_map
-def plot_views(matrix, fig_title):
-
-    middle_slice = int(round(matrix.shape[0] / 2)) - 1
-    fig, axes = plt.subplots(nrows=1, ncols=3)
-    fig.suptitle(fig_title, fontsize=16)
-    #plt.subplot(131)
-    axes[0].imshow(np.rot90(matrix[:,:, middle_slice]), vmin=matrix.min(), vmax=matrix.max())
-    axes[0].set_title('Axial (XY)')
-    #plt.subplot(132)
-    axes[1].imshow(np.rot90(matrix[:,  middle_slice, :]),  vmin=matrix.min(), vmax=matrix.max())
-    axes[1].set_title('Coronal (XZ)')
-    #plt.subplot(133)
-    axes[2].imshow(np.rot90(matrix[middle_slice, :, :]),  vmin=matrix.min(), vmax=matrix.max())
-    axes[2].set_title('Sagittal (YZ)')
-
-    #plt.colorbar()
-    plt.show()
-
-
 
 def spherical_order4(N: int, fmax : float, bin_opt : bool = True,  bin_val : int = 5):
     """
-    Creates a
+    Creates a field map simulating spherical harmonics of 4th order
 
     Parameters
     ----------
@@ -211,23 +199,6 @@ def spherical_order4(N: int, fmax : float, bin_opt : bool = True,  bin_val : int
     l1_Y = np.dstack([y] * N)
     #plot_views(l1_Y, 'Y')
 
-    '''l2_X2Y2 = l1_X ** 2 - l1_Y ** 2
-    #plot_views(l2_X2Y2, 'X2Y2')
-
-    l2_ZX = l1_Z * l1_X
-    plot_views(l2_ZX, 'ZX')
-
-    l2_Z2 = l1_Z ** 2
-    plot_views(l2_Z2, 'Z2')
-
-    l2_ZY = l1_Z * l1_Y
-    plot_views(l2_ZY, 'ZY')
-
-    l2_XY = l1_X * l1_Y
-    plot_views(l2_XY, 'XY')
-
-    l3_X3 = 15 * l1_X * (l1_X ** 2 - 3 * l1_Y ** 2)
-    plot_views(l3_X3, 'X3')'''
     middle_slice = int(round(N / 2)) - 1
     l4_X4 = 105 * (l1_X ** 2 - l1_Y ** 2) ** 2 - 420 * l1_X ** 2 * l1_Y **2
     #plot_views(l4_X4, 'X4')
@@ -239,7 +210,21 @@ def spherical_order4(N: int, fmax : float, bin_opt : bool = True,  bin_val : int
         field_map = fieldmap_bin(field_map, bin_val)
     return field_map
 
-#a = spherical_order3(191, 250)
-#plt.imshow(a)
-#plt.colorbar()
-# plt.show()
+
+'''def plot_views(matrix, fig_title):
+    
+    middle_slice = int(round(matrix.shape[0] / 2)) - 1
+    fig, axes = plt.subplots(nrows=1, ncols=3)
+    fig.suptitle(fig_title, fontsize=16)
+    # plt.subplot(131)
+    axes[0].imshow(np.rot90(matrix[:, :, middle_slice]), vmin=matrix.min(), vmax=matrix.max())
+    axes[0].set_title('Axial (XY)')
+    # plt.subplot(132)
+    axes[1].imshow(np.rot90(matrix[:, middle_slice, :]), vmin=matrix.min(), vmax=matrix.max())
+    axes[1].set_title('Coronal (XZ)')
+    # plt.subplot(133)
+    axes[2].imshow(np.rot90(matrix[middle_slice, :, :]), vmin=matrix.min(), vmax=matrix.max())
+    axes[2].set_title('Sagittal (YZ)')
+
+    # plt.colorbar()
+    plt.show()'''

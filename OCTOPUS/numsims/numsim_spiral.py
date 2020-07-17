@@ -12,11 +12,11 @@ import matplotlib.pyplot as plt
 import OCTOPUS.ORC as ORC
 import OCTOPUS.utils.fieldmap.fieldmap_gen as fieldmap_gen
 from OCTOPUS.utils.plot_results import plot_correction_results
-
+from OCTOPUS.utils.metrics import create_table
 ##
 # Original image: Shep-Logan Phantom
 ##
-ph = np.load('../Recon/test_data/slph_im.npy').astype(complex) # Shep-Logan Phantom
+ph = np.load('../test_data/slph_im.npy').astype(complex) # Shep-Logan Phantom
 ph = (ph - np.min(ph)) / (np.max(ph)-np.min(ph)) # Normalization
 N = ph.shape[0]
 plt.imshow(np.abs(ph), cmap='gray')
@@ -29,7 +29,8 @@ plt.show()
 # Spiral k-space trajectory
 ##
 dt = 10e-6
-ktraj = np.load('../Recon/test_data/ktraj_noncart.npy') # k-space trajectory
+ktraj = np.load('../test_data/ktraj_noncart.npy') # k-space trajectory
+
 plt.plot(ktraj.real,ktraj.imag)
 plt.title('Spiral trajectory')
 plt.show()
@@ -53,10 +54,10 @@ for fmax  in fmax_v:
 
     field_map = fieldmap_gen.realistic(np.abs(ph), fmax)
     ### For reproducibility
-    '''dst = np.zeros((N, N))
-    field_map = cv2.normalize(np.load('M2.npy'), dst, -fmax, fmax, cv2.NORM_MINMAX)
-    field_map = field_map * np.load('mask.npy')
-    field_map = fieldmap_gen.fieldmap_bin(field_map,5)'''
+    # dst = np.zeros((N, N))
+    # field_map = cv2.normalize(np.load('M2.npy'), dst, -fmax, fmax, cv2.NORM_MINMAX)
+    # field_map = field_map * np.load('mask.npy')
+    # field_map = fieldmap_gen.fieldmap_bin(field_map,5)
     ###
     plt.imshow(field_map, cmap='gray')
     plt.title('Field Map +/-' + str(fmax) + ' Hz')
@@ -87,12 +88,15 @@ for fmax  in fmax_v:
 ##
 # Plot
 ##
-
-# Metrics
 im_stack = np.stack((np.squeeze(or_corrupted), np.squeeze(or_corrected_CPR), np.squeeze(or_corrected_fsCPR), np.squeeze(or_corrected_MFI)))
-np.save('im_stack.npy',im_stack)
+#np.save('im_stack.npy',im_stack)
 cols = ('Corrupted Image','CPR Correction', 'fs-CPR Correction', 'MFI Correction')
 row_names = ('-/+ 250 Hz', '-/+ 500 Hz', '-/+ 750 Hz')
 plot_correction_results(im_stack, cols, row_names)
 
 
+##
+# Metrics
+##
+im_stack = np.stack((np.dstack((ph, ph, ph)), or_corrupted, or_corrected_CPR, or_corrected_fsCPR, or_corrected_MFI))
+create_table(im_stack, cols, row_names)

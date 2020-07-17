@@ -1,10 +1,15 @@
-
+# Copyright of the Board of Trustees of Columbia University in the City of New York
+'''
+Calculates entropy for the correction images as well as for the gold standard
+Author: Marina Manso Jimeno
+Last updated: 07/08/2020
+'''
 import numpy as np
 import cv2
 import math
 import matplotlib.pyplot as plt
 
-from Recon.rawdata_recon import mask_by_threshold
+from OCTOPUS.Recon.rawdata_recon import mask_by_threshold
 
 def entropy_im(I):
     I_norm = np.zeros(I.shape)
@@ -38,5 +43,3 @@ for image in images:
 print(entropy)
 
 
-
-print('hi')

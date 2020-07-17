@@ -1,5 +1,6 @@
+# Copyright of the Board of Trustees of Columbia University in the City of New York
 '''
-Prepares field map data for phase unwrapping
+Prepares field map data (from a Siemens scanner) for phase unwrapping with FSL
 Author: Marina Manso Jimeno
 Last updated: 07/08/2020
 '''
@@ -10,10 +11,11 @@ import nibabel as nib
 
 from pydicom import dcmread
 
-from Recon.rawdata_recon import mask_by_threshold
+from OCTOPUS.Recon.rawdata_recon import mask_by_threshold
 
 data_path = os.path.abspath('../../Data/20200708/shim/')
-b0_map = sio.loadmat(os.path.join(data_path, 'rawdata_b0map'))['b0_map']
+
+b0_map = sio.loadmat(os.path.join(data_path, 'rawdata_b0map'))['b0_map'] # field map raw data
 
 ##
 # Acq parameters

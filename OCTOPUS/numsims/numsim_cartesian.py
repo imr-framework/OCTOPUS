@@ -6,15 +6,18 @@ Last updated: 07/15/2020
 '''
 import numpy as np
 import matplotlib.pyplot as plt
+import cv2
 
 import OCTOPUS.utils.fieldmap.fieldmap_gen as fieldmap_gen
 import OCTOPUS.ORC as ORC
 from OCTOPUS.utils.plot_results import plot_correction_results
+from OCTOPUS.utils.metrics import create_table
 
 ##
 # Original image: Shep-Logan Phantom
 ##
-ph = np.load('../Recon/test_data/slph_im.npy').astype(complex) # Shep-Logan Phantom
+
+ph = np.load('../test_data/slph_im.npy').astype(complex) # Shep-Logan Phantom
 ph = (ph - np.min(ph)) / (np.max(ph)-np.min(ph)) # Normalization
 N = ph.shape[0]
 plt.imshow(np.abs(ph), cmap='gray')
@@ -48,9 +51,9 @@ for fmax in fmax_v:
     field_map = fieldmap_gen.realistic(np.abs(ph), fmax)
 
     ### For reproducibility
-    '''dst = np.zeros((N,N))
-    field_map = cv2.normalize(np.load('M2.npy'), dst, -fmax, fmax, cv2.NORM_MINMAX)
-    field_map = field_map * np.load('mask.npy')'''
+    # dst = np.zeros((N,N))
+    # field_map = cv2.normalize(np.load('M2.npy'), dst, -fmax, fmax, cv2.NORM_MINMAX)
+    # field_map = field_map * np.load('mask.npy')
     ###
 
     field_maps[:,:,i] = field_map
@@ -81,6 +84,12 @@ for fmax in fmax_v:
 # Plot
 ##
 im_stack = np.stack((np.squeeze(or_corrupted), np.squeeze(or_corrected_CPR), np.squeeze(or_corrected_fsCPR), np.squeeze(or_corrected_MFI)))
-cols = ('Field Map','Corrupted Image', 'CPR Correction', 'fs-CPR Correction', 'MFI Correction')
+cols = ('Corrupted Image', 'CPR Correction', 'fs-CPR Correction', 'MFI Correction')
 row_names = ('-/+ 1600 Hz', '-/+ 3200 Hz', '-/+ 4800 Hz')
 plot_correction_results(im_stack, cols, row_names)
+
+##
+# Metrics
+##
+im_stack = np.stack((np.dstack((ph, ph, ph)), or_corrupted, or_corrected_CPR, or_corrected_fsCPR, or_corrected_MFI))
+create_table(im_stack, cols, row_names)

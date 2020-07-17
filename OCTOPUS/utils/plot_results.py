@@ -1,3 +1,4 @@
+# Copyright of the Board of Trustees of Columbia University in the City of New York
 '''
 Methods to plot the resulting images from off-resonance correction
 Author: Marina Manso Jimeno
@@ -21,6 +22,9 @@ def plot_correction_results(im_stack : np.ndarray, col_names : tuple, row_names 
     row_names : tuple
         Titles for the rows of the plot. Off-resonance frequency ranges.
     '''
+    if len(row_names) == 1:
+        im_stack = np.expand_dims(im_stack, axis=-1)
+
     nrows = im_stack.shape[-1]
     ncols = im_stack.shape[0]
 
@@ -49,7 +53,3 @@ def plot_correction_results(im_stack : np.ndarray, col_names : tuple, row_names 
 
     plt.show()
 
-'''im_stack = np.load('../Recon/im_stack22.npy')
-col_names = ('Corrupted Image', 'CPR Correction', 'fs-CPR Correction', 'MFI Correction')
-row_names = ('-/+ 250 Hz', '-/+ 500 Hz', '-/+ 750 Hz')
-plot_correction_results(im_stack, col_names, row_names)'''

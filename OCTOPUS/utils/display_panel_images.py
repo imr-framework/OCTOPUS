@@ -1,14 +1,17 @@
+# Copyright of the Board of Trustees of Columbia University in the City of New York
 '''
 Displays a panel with column: Gold standard, Uncorrected spiral, Spiral CPR corrected, spiral fs-CPR corrected and spiral MFI corrected
 Author: Marina Manso Jimeno
 Last updated: 07/08/2020
 '''
 import numpy as np
-from Recon.read_dicom import read_dicom_gre
-from utils.plot_restults import plot_correction_results
+from OCTOPUS.Recon.read_dicom import read_dicom
+from OCTOPUS.utils.plot_results import plot_correction_results
+from OCTOPUS.utils.metrics import create_table
 
-data_paths = ['../../Data/20200708/shim/', '../../Data/20200708/mid_shim/', '../../Data/20200708/no_shim/']
+#data_paths = ['../../Data/20200708/shim/', '../../Data/20200708/mid_shim/', '../../Data/20200708/no_shim/']
 
+data_paths = ['../../../../PhD/OCTOPUS/Data/20200708/shim/', '../../../../PhD/OCTOPUS/Data/20200708/mid_shim/', '../../../../PhD/OCTOPUS/ Data/20200708/no_shim/']
 N = 192
 Nranges = len(data_paths)
 
@@ -19,7 +22,7 @@ CPR = []
 fs_CPR = []
 MFI = []
 for path in data_paths:
-    vol_GS = read_dicom_gre(path + 'GRE_GS_dicom.IMA')
+    vol_GS = read_dicom(path + 'GRE_GS_dicom.IMA')
     vol_uncorr = np.load(path + 'uncorrected_spiral.npy')
     vol_CPR = np.load(path + 'corrections/CPR.npy')
     vol_fsCPR = np.load(path + 'corrections/fsCPR_Lx2.npy')
@@ -47,3 +50,6 @@ rows = ('Shimmed', 'Mid-shimmed', 'Not shimmed')
 im_stack = np.stack((GS, uncorrected, CPR, fs_CPR, MFI))
 
 plot_correction_results(im_stack, cols, rows)
+
+cols = ('Corrupted Image','CPR Correction', 'fs-CPR Correction', 'MFI Correction')
+create_table(im_stack, cols, rows)
