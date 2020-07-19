@@ -11,8 +11,8 @@ import matplotlib.pyplot as plt
 
 import OCTOPUS.ORC as ORC
 import OCTOPUS.Fieldmap.fieldmap_gen as fieldmap_gen
-from OCTOPUS.Utils.plot_results import plot_correction_results
-from OCTOPUS.Utils.metrics import create_table
+from OCTOPUS.utils.plot_results import plot_correction_results
+from OCTOPUS.utils.metrics import create_table
 ##
 # Original image: Shep-Logan Phantom
 ##

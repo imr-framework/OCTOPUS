@@ -16,7 +16,7 @@ import os
 from OCTOPUS.Recon.rawdata_recon import fmap_recon
 from OCTOPUS.Recon.rawdata_recon import spiral_recon
 from OCTOPUS.Recon.read_dicom import read_dicom
-from OCTOPUS.Utils.plot_results import plot_correction_results
+from OCTOPUS.utils.plot_results import plot_correction_results
 
 import OCTOPUS.ORC as ORC
 
@@ -78,8 +78,8 @@ Nslices = rawdata.shape[2]
 t_ro = Npoints * 10e-6 # read-out time, hard-coded for Siemens-Pulseq
 T = np.linspace(4.6e-3, 4.6e-3 + t_ro, Npoints).reshape((Npoints, 1))
 seq_params = {'FOV': FOV, 'N': N, 'Npoints': Npoints, 'Nshots': Nshots, 't_vector': T, 't_readout': t_ro}
-if 'dcf' in globals():
-    seq_params.update({'dcf': dcf})
+#if 'dcf' in globals():
+#    seq_params.update({'dcf': dcf})
 
 
 ##

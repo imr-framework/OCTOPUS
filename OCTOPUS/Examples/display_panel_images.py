@@ -7,8 +7,8 @@ Last updated: 07/08/2020
 import numpy as np
 import configparser
 from OCTOPUS.Recon.read_dicom import read_dicom
-from OCTOPUS.Utils.plot_results import plot_correction_results
-from OCTOPUS.Utils.metrics import create_table
+from OCTOPUS.utils.plot_results import plot_correction_results
+from OCTOPUS.utils.metrics import create_table
 
 
 # Read settings.ini configuration file

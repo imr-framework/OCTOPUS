@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 
 import OCTOPUS.ORC as ORC
 
-def fieldmap_bin(field_map: np.ndarray, bin : int):
+def fieldmap_bin(field_map, bin):
     '''
     Bins a given field map given a binning value
 
@@ -38,7 +38,7 @@ def fieldmap_bin(field_map: np.ndarray, bin : int):
 
     return binned_field_map
 
-def parabola_formula(N: int):
+def parabola_formula(N):
     """
     Parabola values to fit an image of N rows/columns
 
@@ -66,7 +66,7 @@ def parabola_formula(N: int):
 
     return yaxis
 
-def parabolic(N: int, fmax : float, bin_opt : bool = True, bin_val : int = 5):
+def parabolic(N, fmax, bin_opt = True, bin_val = 5):
     """
     Creates a parabolic field map
 
@@ -96,7 +96,7 @@ def parabolic(N: int, fmax : float, bin_opt : bool = True, bin_val : int = 5):
 
     return field_map
 
-def hyperbolic(N: int, fmax : float, bin_opt : bool = True,  bin_val : int = 5):
+def hyperbolic(N, fmax, bin_opt = True,  bin_val= 5):
     """
     Creates a hyperbolic field map
 
@@ -126,7 +126,7 @@ def hyperbolic(N: int, fmax : float, bin_opt : bool = True,  bin_val : int = 5):
         field_map = fieldmap_bin(field_map, bin_val)
     return field_map
 
-def realistic(im : np.ndarray, fmax : float, bin_opt : bool = True, bin_val : int = 5):
+def realistic(im , fmax , bin_opt = True, bin_val = 5):
     """
     Creates a realistic field map based on the input image
 
@@ -167,7 +167,7 @@ def realistic(im : np.ndarray, fmax : float, bin_opt : bool = True, bin_val : in
 
     return field_map
 
-def spherical_order4(N: int, fmax : float, bin_opt : bool = True,  bin_val : int = 5):
+def spherical_order4(N, fmax, bin_opt  = True,  bin_val= 5):
     """
     Creates a field map simulating spherical harmonics of 4th order
 
