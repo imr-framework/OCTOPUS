@@ -1,8 +1,8 @@
 # Copyright of the Board of Trustees of Columbia University in the City of New York
 '''
 Methods to read DICOM files corresponding to GRE field map and GRE Siemens sequences
-Author: Marina Manso Jimeno
-Last modified: 07/16/2020
+\nAuthor: Marina Manso Jimeno
+\nLast modified: 07/16/2020
 '''
 
 from pydicom import dcmread

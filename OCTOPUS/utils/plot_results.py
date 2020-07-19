@@ -1,15 +1,15 @@
 # Copyright of the Board of Trustees of Columbia University in the City of New York
 '''
 Methods to plot the resulting images from off-resonance correction
-Author: Marina Manso Jimeno
-Last updated: 06/03/2020
+\nAuthor: Marina Manso Jimeno
+\nLast updated: 06/03/2020
 '''
 import numpy as np
 import matplotlib.pyplot as plt
 
 from mpl_toolkits.axes_grid1 import ImageGrid
 
-def plot_correction_results(im_stack : np.ndarray, col_names : tuple, row_names : tuple ):
+def plot_correction_results(im_stack, col_names, row_names):
     '''
     Creates a plot with the resulting correction images in a grid
 

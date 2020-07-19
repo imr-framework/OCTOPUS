@@ -1,8 +1,8 @@
 # Copyright of the Board of Trustees of Columbia University in the City of New York
 '''
 Methods to calculate off-resonance correction performance metrics
-Author: Marina Manso Jimeno
-Last updated: 06/03/2020
+\nAuthor: Marina Manso Jimeno
+\nLast updated: 06/03/2020
 '''
 
 import scipy.io as sio

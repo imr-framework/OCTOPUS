@@ -1,8 +1,8 @@
 # Copyright of the Board of Trustees of Columbia University in the City of New York
 '''
 Methods to reconstruct a field map and spiral images from raw data.
-Author: Marina Manso Jimeno
-Last modified: 07/16/2020
+\nAuthor: Marina Manso Jimeno
+\nLast modified: 07/16/2020
 '''
 import scipy.io as sio
 import numpy as np
@@ -42,7 +42,6 @@ def hermitian_product(echo1, echo2, dTE):
 
     Parameters
     ----------
-    #TODO: Check dimensions
     echo1 : np.ndarray
         Complex image corresponding to the first echo with dimensions [N, N, Nslices, Nchannels]
     echo2 : np.ndarray
@@ -178,7 +177,7 @@ def fmap_recon(data_path, method = 'HP', save = 0, plot = 0):
 
     return fmap
 
-def spiral_recon(data_path, ktraj, N, plot = 0):
+def spiral_recon(data_path, dst_folder, ktraj, N, plot = 0):
     '''
     Spiral image reconstruction from raw data
 
@@ -186,6 +185,8 @@ def spiral_recon(data_path, ktraj, N, plot = 0):
     ----------
     data_path : str
         Path containing the raw data .mat file
+    dst_folder : str
+        Path to the folder where the reconstructed image is saved
     ktraj : np.ndarray
         k-space trajectory coordinates with dimensions [Npoints, Nshots]
     N : int
@@ -240,7 +241,7 @@ def spiral_recon(data_path, ktraj, N, plot = 0):
 
     sos = np.sum(np.abs(im), -1)
     sos = np.divide(sos, np.max(sos))
-    np.save(data_path + 'uncorrected_spiral.npy', sos)
+    np.save(dst_folder + 'uncorrected_spiral.npy', sos)
 
     if plot:
         plt.imshow(np.rot90(np.abs(sos[:,:,0]),-1), cmap='gray')
