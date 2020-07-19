@@ -21,7 +21,9 @@ After the [installation] is completed, download the [example data]. Now you can 
 ### Numerical simulations
 
 `numsim_cartesian.py` and `numsim_spiral.py` run a forward model on a 192x192 Shepp-Logan phantom image. They simulate the off-resonance effect of a cartesian and spiral k-space trajectory, respectively, given a simulated field map.
+
 With `OCTOPUS.Fieldmap.fieldmap_gen` you can experiment the effect of the type of field map and its frequency range on the output corrupted image.
+
 The corrupted image is then corrected using CPR, fs-CPR and MFI and the results are displayed.
 
 ### Real data
