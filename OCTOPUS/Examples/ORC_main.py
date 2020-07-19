@@ -31,6 +31,9 @@ outputs = config['CORRECTION OUTPUTS']
 # Load the input data (raw data, k-space trajectory and field map)
 ##
 FOV = 384e-3 # meters
+dt = 10e-6 # seconds
+TE = 4.6e-3 # seconds
+
 if inputs['path_rawdatspiral_file'][-3:] == 'mat':
     rawdata = sio.loadmat(inputs['path_rawdatspiral_file'])['dat']
 elif inputs['path_rawdatspiral_file'][-3:] == 'npy':
@@ -75,8 +78,8 @@ if len(rawdata.shape) < 4:
     rawdata = rawdata.reshape(Npoints, Nshots, 1, Nchannels)
 Nslices = rawdata.shape[2]
 
-t_ro = Npoints * 10e-6 # read-out time, hard-coded for Siemens-Pulseq
-T = np.linspace(4.6e-3, 4.6e-3 + t_ro, Npoints).reshape((Npoints, 1))
+t_ro = Npoints * dt # read-out time, hard-coded for Siemens-Pulseq
+T = np.linspace(TE, TE + t_ro, Npoints).reshape((Npoints, 1))
 seq_params = {'FOV': FOV, 'N': N, 'Npoints': Npoints, 'Nshots': Nshots, 't_vector': T, 't_readout': t_ro}
 #if 'dcf' in globals():
 #    seq_params.update({'dcf': dcf})

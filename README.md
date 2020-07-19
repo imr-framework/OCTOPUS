@@ -7,6 +7,39 @@ OCTOPUS leverages existing techniques and outputs artifact-corrected or mitigate
 
 To learn more about the used methods and their implementation visit the API docs.
 
+## Installation
+1. Install Python (>=Python 3.6)
+2. Create and activate a virtual environment (optional but recommended)
+3. Copy and paste this command in your terminal
+```pip install MR-OCTOPUS```
+
+## Quick start
+The [Examples folder] contains scripts and data to run off-resonance correction on numerical simulations and phantom images for different k-space trajectories and field maps.
+
+After the [installation] is completed, download the [example data]. Now you can run two types of demos.
+
+### Numerical simulations
+
+`numsim_cartesian.py` and `numsim_spiral.py` run a forward model on a 192x192 Shepp-Logan phantom image. They simulate the off-resonance effect of a cartesian and spiral k-space trajectory, respectively, given a simulated field map.
+With `OCTOPUS.Fieldmap.fieldmap_gen` you can experiment the effect of the type of field map and its frequency range on the output corrupted image.
+The corrupted image is then corrected using CPR, fs-CPR and MFI and the results are displayed.
+
+### Real data
+If you want to use `OCTOPUS` to correct real data, you can use `ORC_main.py` as a template.
+1. Fill the `settings.ini` file with the paths for your inputs and outputs. NOTE: the default settings are configured to run the script using the sample data provided.
+2. Input your field of view (FOV), gradient raster time (dt), and echo time (TE).
+```python
+FOV =  384e-3 # meters
+dt = 10e-6 # seconds
+TE = 4.6e-3 # seconds
+```
+3. Specify the number of frequency segments for the fs-CPR and MFI methods
+```python
+Lx = 2 # L=Lmin * Lx
+```
+4. Run the script.
+The program will display an image panel with the original image and the corrected versions.
+
 ## Contributing and Community guidelines
 `OCTOPUS` adheres to a code of conduct adapted from the [Contributor Covenant] code of conduct.
 Contributing guidelines can be found [here][contrib-guidelines].
@@ -19,14 +52,8 @@ Contributing guidelines can be found [here][contrib-guidelines].
 5. Schomberg, H. (1999), Off-resonance correction of MR images. IEEE Transactions on Medical Imaging, 18( 6): 481-495. doi: 10.1109/42.781014
 
 [api-docs]: https://pypulseq.readthedocs.io/en/latest
-[Bruker]: https://github.com/pulseq/bruker_interpreter
 [Contributor Covenant]: http://contributor-covenant.org
 [contrib-guidelines]: https://github.com/imr-framework/OCTOPUS/blob/master/CONTRIBUTING.md
-[GE]: https://toppemri.github.io
-[google-colab]: https://colab.research.google.com/
 [installation]: #installation
-[lightning-start]: #lightning-start----pypulseq-in-your-browser
-[notebook-examples]: https://github.com/imr-framework/pypulseq/tree/master/pypulseq/seq_examples/notebooks
-[Pulseq specification]: https://pulseq.github.io/specification.pdf
-[scholar-citations]: https://scholar.google.com/scholar?oi=bibs&hl=en&cites=16703093871665262997
-[script-examples]: https://github.com/imr-framework/pypulseq/tree/master/pypulseq/seq_examples/script
+[Examples folder]: https://github.com/imr-framework/OCTOPUS/tree/master/OCTOPUS/Examples
+[example data]: https://github.com/imr-framework/OCTOPUS/blob/master/OCTOPUS/Examples/examples_zip.zip
