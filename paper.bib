@@ -1,0 +1,167 @@
+@article{Smith2010,
+abstract = {Artifacts appear in MRI for a variety of reasons. Potential sources of artifacts include nonideal hardware characteristics, intrinsic tissue properties and biological behavior, assumptions underlying the data acquisition and image reconstruction process, and poor choice of scanning parameters. Careful study design and scanning protocols can prevent certain artifacts from occurring, but some are unavoidable. Numerous correction methods have been developed to mitigate the corruptive effects of artifacts and improve image diagnostic quality. These methods include special pulse sequence designs, improved scanning procedures and equipment, and advanced postprocessing algorithms. Recognizing artifacts and understanding their underlying causes are important when interpreting images and choosing a correction approach. {\textcopyright} 2010 Future Medicine Ltd.},
+author = {Smith, Travis B. and Nayak, Krishna S.},
+doi = {10.2217/iim.10.33},
+issn = {17555191},
+journal = {Imaging in Medicine},
+keywords = {MRI,artifact correction,artifacts,magnetic resonance imaging,motion,off-resonance},
+mendeley-groups = {OCTOPUS-JOSS},
+number = {4},
+pages = {445--457},
+title = {{MRI artifacts and correction strategies}},
+volume = {2},
+year = {2010}
+}
+
+@article{Noll1991,
+abstract = {When time-varying gradients are used for imaging, the off-resonance behavior does not just cause geometric distortion as is the case with spin-warp imaging, but changes the shape of the impulse response and causes blurring. This effect is well known for projection reconstruction and spiral k-space scanning sequences. We introduce here a reconstruction and homogeneity correction method to correct for the zeroth order effects of inhomogeneity using a priori knowledge of the inhomogeneity. In this method, the data are segmented according to collection time, reconstructed using some fast, linear algorithm, corrected for inhomogeneity and then superimposed to yield a homogeneity corrected image. This segmented method is compared to a conjugate phase reconstruction in terms of degree of correction and execution time. We apply this method to in vivo images using projection-reconstruction and spiralscan sequences. {\textcopyright} 1991 IEEE},
+author = {Noll, Douglas C. and Meyer, Craig H. and Pauly, John M. and Nishimura, Dwight G. and Macovski, Albert},
+doi = {10.1109/42.108599},
+issn = {1558254X},
+journal = {IEEE Transactions on Medical Imaging},
+mendeley-groups = {OCTOPUS-JOSS},
+number = {4},
+pages = {629--637},
+title = {{A Homogeneity Correction Method for Magnetic Resonance Imaging with Time-Vaiying Gradients}},
+volume = {10},
+year = {1991}
+}
+
+@article{LukPat2001,
+abstract = {Off-resonant spins, produced by chemical shift, tissue-susceptibility differences, or main-field inhomogeneity, can cause blurring or shifts, severely compromising the diagnostic value of magnetic resonance images. To mitigate these off-resonance effects, the authors propose a technique whereby two images are acquired at different echo times (TEs) and interpolated to produce a single image with dramatically-reduced blurring. The phase difference of these two images is not used to produce a field map; instead, the weighted complex-valued average of the two images is used to produce a single image. Previously-described methods reconstruct a set of preliminary images, each at a different off-resonant frequency, and then assemble these into one final image, choosing the best off-resonant frequency for each voxel. Compared to these methods, the proposed technique requires the same or less processing time and is much less sensitive to errors in the field map. This technique was applied to centric-ordered EPI but it can be applied to any imaging trajectory, including one-shot EPI, spiral imaging, projection-reconstruction imaging, and 2D GRASE. {\textcopyright} 2001 Wiley-Liss, Inc.},
+author = {Luk-Pat, Gerard T. and Nishimura, Dwight G.},
+doi = {10.1002/1522-2594(200102)45:2<269::AID-MRM1036>3.0.CO;2-5},
+issn = {07403194},
+journal = {Magnetic Resonance in Medicine},
+keywords = {Coronary-artery imaging,Echo-planar imaging,Inhomogeneity,K-space,Off-resonance},
+mendeley-groups = {OCTOPUS-JOSS},
+number = {2},
+pages = {269--276},
+title = {{Reducing off-resonance distortion by echo-time interpolation}},
+volume = {45},
+year = {2001}
+}
+
+@article{Chen2008,
+abstract = {Spiral scanning is a promising MRI method, but one limitation is that off-resonance effects can cause image blurring. Most current off-resonance correction methods for spiral imaging require an accurate field map, which is difficult to obtain in many applications. Automatic methods can perform off-resonance correction without acquiring a field map. However, these methods are computationally inefficient and relatively prone to estimation error. This study describes a new semiautomatic off-resonance correction method that combines an automatic method with a low resolution field map acquisition for off-resonance correction in spiral scanning. Experiments demonstrate that this method is more robust than conventional automatic off-resonance correction and can provide more accurate off-resonance correction than conventional field map based methods. The proposed method is also computationally efficient and has been implemented for online reconstruction. {\textcopyright} 2008 Wiley-Liss, Inc.},
+author = {Chen, Weitian and Meyer, Craig H.},
+doi = {10.1002/mrm.21599},
+issn = {07403194},
+journal = {Magnetic Resonance in Medicine},
+keywords = {Automatic deblurring,Deblurring,MRI,Off-resonance correction,Spiral},
+mendeley-groups = {OCTOPUS-JOSS},
+pages = {1212--1219},
+title = {{Semiautomatic off-resonance correction in spiral imaging}},
+volume = {59},
+year = {2008}
+}
+
+@article{Schomberg1999,
+abstract = {In magnetic resonance imaging (MRI), the spatial inhomogeneity of the static magnetic field can cause degraded images if the reconstruction is based on inverse Fourier transformation. This paper presents and discusses a range of fast reconstruction algorithms that attempt to avoid such degradation by taking the field inhomogeneity into account. Some of these algorithms are new, others are modified versions of known algorithms. Speed and accuracy of all these algorithms are demonstrated using spiral MRI.},
+author = {Schomberg, Hermann},
+doi = {10.1109/42.781014},
+issn = {02780062},
+journal = {IEEE Transactions on Medical Imaging},
+mendeley-groups = {OCTOPUS-JOSS},
+number = {6},
+pages = {481--495},
+title = {{Off-resonance correction of MR images}},
+volume = {18},
+year = {1999}
+}
+
+@article{Maeda1988,
+abstract = {A general reconstruction algorithm for magnetic resonance imaging (MRI) with gradients having arbitrary time dependence is presented. This method estimates spin density by calculating the “weighted” correlation of the observed FID signal and the phase modulation function at each point. A theorem which states that this method can be derived from the conditions of linearity and shift invariance is presented. Since these conditions are general, most of the MRI reconstruction algorithms proposed so far are equivalent to the weighted correlation method. An explicit representation of the point spread function (PSF) in the weighted correlation method is given. By using this representation, a method to control the PSF and the static field inhomogeneity effects are studied. A correction method for the inhomogeneity effects is proposed, and a limitation is clarified. Some simulation results are also presented. {\textcopyright} 1988 IEEE},
+author = {Maeda, Akira and Sano, Koichi and Yokoyama, Tetsuo},
+doi = {10.1109/42.3926},
+issn = {1558254X},
+journal = {IEEE Transactions on Medical Imaging},
+mendeley-groups = {OCTOPUS-JOSS},
+number = {1},
+pages = {26--31},
+title = {{Reconstruction by Weighted Correlation for MRI with Time-Varying Gradients}},
+volume = {7},
+year = {1988}
+}
+
+@article{Noll1992,
+abstract = {For several non‐2D Fourier transform imaging methods, off‐resonant reconstruction does not just cause geometric distortion, but changes the shape of the point spread function and causes blurring. This effect is well known for projection reconstruction and spiral k‐space scanning sequences. We introduce here a method that automatically removes blur introduced by magnetic field inhomogeneity and susceptibility without using a resonant frequency map, making these imaging methods more useful. In this method, the raw data are modulated to several different frequencies and reconstructed to create a series of base images. Determination of degree of blur is done by calculating a focusing measure for each point in each base image and a composite image is then constructed using only the unblurred regions from each base image. This method has been successfully applied to phantom and in vivo images using projection‐reconstruction and spiral‐scan sequences. {\textcopyright} 1992 Academic Press, Inc. Copyright {\textcopyright} 1992 Wiley‐Liss, Inc., A Wiley Company},
+author = {Noll, Douglas C. and Pauly, John M. and Meyer, Craig H. and Nishimura, Dwight G. and Macovskj, Albert},
+doi = {10.1002/mrm.1910250210},
+issn = {15222594},
+journal = {Magnetic Resonance in Medicine},
+mendeley-groups = {OCTOPUS-JOSS},
+number = {2},
+pages = {319--333},
+title = {{Deblurring for non‐2D fourier transform magnetic resonance imaging}},
+volume = {25},
+year = {1992}
+}
+
+@article{Man1997,
+abstract = {Field inhomogeneities or susceptibility variations produce blurring in images acquired using non-2DFT k-space readout trajectories. This problem is more pronounced for sequences with long readout times such as spiral imaging. Theoretical and practical correction methods based on an acquired field map have been reported in the past. This paper introduces a new correction method based on the existing concept of frequency segmented correction but which is faster and theoretically more accurate. It consists of reconstructing the data at several frequencies to form a set of base images that are then added together with spatially varying linear coefficients derived from the field map. The new algorithm is applied to phantom and in vivo images acquired with projection reconstruction end spiral sequences, yielding sharply focused images.},
+author = {Man, Lai Chee and Pauly, John M. and Macovski, Albert},
+doi = {10.1002/mrm.1910370523},
+issn = {07403194},
+journal = {Magnetic Resonance in Medicine},
+keywords = {MRI,blur,inhomogeneity,spiral},
+mendeley-groups = {OCTOPUS-JOSS},
+number = {5},
+pages = {785--792},
+pmid = {9126954},
+title = {{Multifrequency interpolation for fast off-resonance correction}},
+volume = {37},
+year = {1997}
+}
+
+@article{Lustig2010,
+abstract = {A new approach to autocalibrating, coil-by-coil parallel imaging reconstruction, is presented. It is a generalized reconstruction framework based on self-consistency. The reconstruction problem is formulated as an optimization that yields the most consistent solution with the calibration and acquisition data. The approach is general and can accurately reconstruct images from arbitrary k-space sampling patterns. The formulation can flexibly incorporate additional image priors such as off-resonance correction and regularization terms that appear in compressed sensing. Several iterative strategies to solve the posed reconstruction problem in both image and k-space domain are presented. These are based on a projection over convex sets and conjugate gradient algorithms. Phantom and in vivo studies demonstrate efficient reconstructions from undersampled Cartesian and spiral trajectories. Reconstructions that include off-resonance correction and nonlinear ℓ1-wavelet regularization are also demonstrated. {\textcopyright} 2010 Wiley-Liss, Inc.},
+author = {Lustig, Michael and Pauly, John M.},
+doi = {10.1002/mrm.22428},
+issn = {07403194},
+journal = {Magnetic Resonance in Medicine},
+keywords = {Autocalibration,Compressed sensing,GRAPPA,Image reconstruction,Iterative reconstruction,Parallel imaging,SENSE},
+mendeley-groups = {OCTOPUS-JOSS},
+number = {2},
+pages = {457--471},
+pmid = {20665790},
+title = {{SPIRiT: Iterative self-consistent parallel imaging reconstruction from arbitrary k-space}},
+volume = {64},
+year = {2010}
+}
+
+@article{Ostenson2017,
+abstract = {Magnetic resonance fingerprinting (MRF) pulse sequences often employ spiral trajectories for data readout. Spiral k-space acquisitions are vulnerable to blurring in the spatial domain in the presence of static field off-resonance. This work describes a blurring correction algorithm for use in spiral MRF and demonstrates its effectiveness in phantom and in vivo experiments. Results show that image quality of T1 and T2 parametric maps is improved by application of this correction. This MRF correction has negligible effect on the concordance correlation coefficient and improves coefficient of variation in regions of off-resonance relative to uncorrected measurements.},
+author = {Ostenson, Jason and Robison, Ryan K. and Zwart, Nicholas R. and Welch, E. Brian},
+doi = {10.1016/j.mri.2017.07.004},
+issn = {18735894},
+journal = {Magnetic Resonance Imaging},
+keywords = {Magnetic resonance fingerprinting,Off-resonance,Relaxometry,Spiral trajectory},
+mendeley-groups = {OCTOPUS-JOSS},
+pages = {63--72},
+title = {{Multi-frequency interpolation in spiral magnetic resonance fingerprinting for correction of off-resonance blurring}},
+volume = {41},
+year = {2017}
+}
+
+@article{Jenkinson2012,
+abstract = {FSL (the FMRIB Software Library) is a comprehensive library of analysis tools for functional, structural and diffusion MRI brain imaging data, written mainly by members of the Analysis Group, FMRIB, Oxford. For this NeuroImage special issue on“20years offMRI”we have beenaskedtowrite about the history, developments and current status of FSL.We also include some descriptions of parts of FSL that are not well covered in the existing literature.We hope that some of this contentmight be of interest to users of FSL, and alsomaybe to newresearch groups considering creating, releasing and supporting newsoftware packages for brain image analysis.},
+author = {Jenkinson, Mark and Beckmann, Christian F and Behrens, Timothy E J and Woolrich, Mark W and Smith, Stephen M},
+doi = {10.1016/j.neuroimage.2011.09.015},
+journal = {NeuroImage},
+mendeley-groups = {OCTOPUS-JOSS},
+number = {2},
+pages = {782--790},
+title = {{Review FSL}},
+volume = {62},
+year = {2012}
+}
+
+@phdthesis{Nylund2014,
+author = {Nylund, Andreas},
+mendeley-groups = {OCTOPUS-JOSS},
+pages = {43},
+school = {KTH},
+title = {{Off-resonance correction for magnetic resonance imaging with spiral trajectories}},
+year = {2014}
+}

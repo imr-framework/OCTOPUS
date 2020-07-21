@@ -1,3 +1,6 @@
+<p align="center">
+<img src="OCTOPUSLogo.png"/>
+</p>
 # OCTOPUS: Off-resonance CorrecTion OPen-soUrce Software
 OCTOPUS is an open-source tool that provides off-resonance correction  methods for  Magnetic Resonance (MR) images. In particular, the implemented techniques are Conjugate Phase Reconstruction (CPR)[[1]](#references), frequency-segmented CPR [[2]](#references) and Multi-Frequency Interpolation (MFI) [[3]](#references).
 
@@ -31,15 +34,17 @@ If you want to use `OCTOPUS` to correct real data, you can use `ORC_main.py` as 
 1. Fill the `settings.ini` file with the paths for your inputs and outputs. NOTE: the default settings are configured to run the script using the sample data provided.
 2. Input your field of view (FOV), gradient raster time (dt), and echo time (TE).
 ```python
-FOV =  384e-3 # meters
-dt = 10e-6 # seconds
-TE = 4.6e-3 # seconds
+FOV =   # meters
+dt =    # seconds
+TE =    # seconds
 ```
-3. Specify the number of frequency segments for the fs-CPR and MFI methods
+3. Check that the dimensions of your inputs agree.
+	`rawdata` dims = `ktraj` dims
+5. Specify the number of frequency segments for the fs-CPR and MFI methods
 ```python
-Lx = 2 # L=Lmin * Lx
+Lx =    # L=Lmin * Lx
 ```
-4. Run the script.
+6. Run the script.
 The program will display an image panel with the original image and the corrected versions.
 
 ## Contributing and Community guidelines

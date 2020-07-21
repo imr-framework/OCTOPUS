@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 
 from skimage import data, img_as_float
 
-def SSIM_calc(im1 : np.ndarray, im2 : np.ndarray):
+def SSIM_calc(im1, im2):
     '''
     Structural Similarity Index Calculation for two images
 
@@ -75,7 +75,7 @@ def LoG(im):
 
     return log_im
 
-def HFEN(im1 : np.ndarray, im2 : np.ndarray):
+def HFEN(im1, im2):
     '''
     High Frequency Error Norm calculation for two images
 
@@ -98,7 +98,7 @@ def HFEN(im1 : np.ndarray, im2 : np.ndarray):
 
     return hfen
 
-def create_table(stack_of_images : np.ndarray, col_names : tuple, franges : tuple):
+def create_table(stack_of_images, col_names, franges):
     '''
     Displays a table with the metrics for images corrected using the different ORC methods
 
