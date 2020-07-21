@@ -8,10 +8,10 @@ import scipy.io as sio
 import numpy as np
 import matplotlib.pyplot as plt
 import numpy.fft as fft
-import nibabel as nib
 import math
 
-from pynufft import NUFFT_cpu
+from OCTOPUS.utils.get_data_from_file import get_data_from_file
+from OCTOPUS.Recon.imtransforms import nufft_init, ksp2im
 
 def mask_by_threshold(im):
     '''
@@ -97,20 +97,24 @@ def separate_channels(echo1, echo2, dTE):
 
     return fmap_chcomb
 
-def fmap_recon(data_path, method = 'HP', save = 0, plot = 0):
+def fmap_recon(data, dTE, method = 'HP', save = 0, plot = 0, dst_folder = None):
     '''
     Frequency map reconstruction from dual echo raw data
 
     Parameters
     ----------
-    data_path : str
-        Path containing the raw data .mat file
+    data : str or np.ndarray
+        Path containing the field map file or array containing the field map data
+    dTE : float
+        Difference in TE between the two echoes in seconds
     method : str
         Method for channel combination. Options are 'HP' or 'SC'. Default is 'HP'.
-    save : bool
-        Saving the data in a .npy file option. Default is 0 (not save).
-    plot : bool
+    plot : bool, Optional
         Plotting a slice of the reconstructed frequency map option. Default is 0 (not plot).
+    save : bool, Optional
+        Saving the data in a .npy file option. Default is 0 (not save).
+    dst_folder : str, Optional
+        Path to the folder where the reconstructed field map is saved. Default is None.
 
     Returns
     -------
@@ -120,12 +124,14 @@ def fmap_recon(data_path, method = 'HP', save = 0, plot = 0):
     ##
     # Load the raw data
     ##
-    f_map =  sio.loadmat(data_path)['b0_map']
+    if isinstance(data, str):
+        f_map = get_data_from_file(data)
+    elif isinstance(data, np.ndarray):
+        f_map = data
 
     ##
     # Acq parameters
     ##
-    dTE = 2.46e-3 # seconds
     N = f_map.shape[1] # Matrix Size
     Nchannels = f_map.shape[-1]
 
@@ -164,7 +170,9 @@ def fmap_recon(data_path, method = 'HP', save = 0, plot = 0):
 
     fmap = np.fliplr(fmap)
     if save:
-        np.save(data_path+'fmap', fmap)
+        if dst_folder is None:
+            raise ValueError('Please specify destination folder')
+        np.save(dst_folder + 'fmap', fmap)
 
     if plot:
         mid = math.floor(fmap.shape[-1]/2)
@@ -177,28 +185,33 @@ def fmap_recon(data_path, method = 'HP', save = 0, plot = 0):
 
     return fmap
 
-def spiral_recon(data_path, dst_folder, ktraj, N, plot = 0):
+def spiral_recon(data, ktraj, N, plot = 0, save = 0, dst_folder = None):
     '''
     Spiral image reconstruction from raw data
 
     Parameters
     ----------
-    data_path : str
-        Path containing the raw data .mat file
-    dst_folder : str
-        Path to the folder where the reconstructed image is saved
+    data : str or np.ndarray
+        Path containing the raw data file of array containing the raw data
     ktraj : np.ndarray
         k-space trajectory coordinates with dimensions [Npoints, Nshots]
     N : int
         Matrix size of the reconstructed image
-    plot : bool
+    plot : bool, Optional
         Plotting a slice of the reconstructed image option. Default is 0 (not plot).
+    save : bool, Optional
+        Saving the data in a .npy file option. Default is 0 (not save).
+    dst_folder : str, Optional
+        Path to the folder where the reconstructed image is saved. Default is None.
     '''
 
     ##
     # Load the raw data
     ##
-    dat = sio.loadmat(data_path)['dat']
+    if isinstance(data, str):
+        dat = get_data_from_file(data)
+    elif isinstance(data, np.ndarray):
+        dat = data
     ##
     # Acq parameters
     ##
@@ -216,38 +229,28 @@ def spiral_recon(data_path, dst_folder, ktraj, N, plot = 0):
     if dat.shape[0] != ktraj.shape[0] or dat.shape[1] != ktraj.shape[1]:
         raise ValueError('Raw data and k-space trajectory do not match!')
 
-    ##
-    # Arrange data for pyNUFFT
-    ##
-    ktraj_sc = math.pi / abs(np.max(ktraj))
-    ktraj = ktraj * ktraj_sc  # pyNUFFT scaling [-pi, pi]
-    om = np.zeros((Npoints * Nshots, 2))
-    om[:, 0] = np.real(ktraj).flatten()
-    om[:, 1] = np.imag(ktraj).flatten()
-
-    NufftObj = NUFFT_cpu()  # Create a pynufft object
-    Nd = (N, N)  # image size
-    Kd = (2 * N, 2 * N)  # k-space size
-    Jd = (6, 6)  # interpolation size
-    NufftObj.plan(om, Nd, Kd, Jd)
 
     ##
     # Recon
     ##
+    NUFFT_object = nufft_init(ktraj, {'N': N, 'Npoints': Npoints, 'Nshots': Nshots})
     im = np.zeros((N, N, Nslices, Nchannels), dtype=complex)
     for ch in range(Nchannels):
         for sl in range(Nslices):
-            im[:,:,sl,ch] = NufftObj.solve(dat[:,:,sl,ch].flatten(), solver='cg', maxiter=50)
+            im[:,:,sl,ch] = ksp2im(dat[:,:,sl,ch], 0, NUFFT_object, {'N': N, 'Npoints': Npoints, 'Nshots': Nshots})#NufftObj.solve(dat[:,:,sl,ch].flatten(), solver='cg', maxiter=50)
+
 
     sos = np.sum(np.abs(im), -1)
     sos = np.divide(sos, np.max(sos))
-    np.save(dst_folder + 'uncorrected_spiral.npy', sos)
 
     if plot:
         plt.imshow(np.rot90(np.abs(sos[:,:,0]),-1), cmap='gray')
         plt.axis('off')
         plt.title('Uncorrected Image')
-        #plt.savefig('foo.png')
         plt.show()
 
+    if save:
+        if dst_folder is None:
+            raise ValueError('Please specify destination folder')
+        np.save(dst_folder + 'uncorrected_spiral.npy', sos)
     return sos

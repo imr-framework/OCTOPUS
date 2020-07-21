@@ -13,6 +13,7 @@ import math
 import time
 import os
 
+from OCTOPUS.utils.get_data_from_file import get_data_from_file
 from OCTOPUS.Recon.rawdata_recon import fmap_recon
 from OCTOPUS.Recon.rawdata_recon import spiral_recon
 from OCTOPUS.Recon.read_dicom import read_dicom
@@ -34,20 +35,17 @@ FOV = 384e-3 # meters
 dt = 10e-6 # seconds
 TE = 4.6e-3 # seconds
 
-if inputs['path_rawdatspiral_file'][-3:] == 'mat':
-    rawdata = sio.loadmat(inputs['path_rawdatspiral_file'])['dat']
-elif inputs['path_rawdatspiral_file'][-3:] == 'npy':
-    rawdata = np.load(inputs['path_rawdatspiral_file'])
+rawdata = get_data_from_file(inputs['path_rawdatspiral_file'])
+ktraj = get_data_from_file(inputs['path_ktraj_file'])
 
-ktraj = np.load(inputs['path_ktraj_file'])
 # Optional
 if inputs['path_dcf_file']:
-    dcf = sio.loadmat(inputs['path_dcf_file'])['dcf_out'].flatten() # Density correction factor
+    dcf = get_data_from_file(inputs['path_dcf_file']).flatten() # Density correction factor
 
 if inputs['path_fmapunwrapped_file']:
-    fmap = np.fliplr(nib.load(inputs['path_fmapunwrapped_file']).get_fdata() / (2 * math.pi))
+    fmap = np.fliplr(get_data_from_file(inputs['path_fmapunwrapped_file']) / (2 * math.pi))
 else:
-    fmap = fmap_recon(inputs['path_rawfmap_file'], method='HP', plot = 0)
+    fmap = fmap_recon(inputs['path_rawfmap_file'], 2.46e-3,  method='HP', plot = 0, save = 0)
 
 if len(fmap.shape) == 2:
     fmap = np.expand_dims(fmap, axis=2)
@@ -88,7 +86,7 @@ seq_params = {'FOV': FOV, 'N': N, 'Npoints': Npoints, 'Nshots': Nshots, 't_vecto
 ##
 # Plot the original data
 ##
-original_im = spiral_recon(inputs['path_rawdatspiral_file'], outputs['path_uncorrectedimage_folder'], ktraj, N, plot=1)
+original_im = spiral_recon(inputs['path_rawdatspiral_file'], ktraj, N, plot=1, save=0)
 
 ##
 # Off resonance correction
