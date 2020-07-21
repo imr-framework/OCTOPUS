@@ -1,6 +1,7 @@
 <p align="center">
-<img src="OCTOPUSLogo.png"/>
+<img src="OCTOPUSLogo_rect.png"/>
 </p>
+
 # OCTOPUS: Off-resonance CorrecTion OPen-soUrce Software
 OCTOPUS is an open-source tool that provides off-resonance correction  methods for  Magnetic Resonance (MR) images. In particular, the implemented techniques are Conjugate Phase Reconstruction (CPR)[[1]](#references), frequency-segmented CPR [[2]](#references) and Multi-Frequency Interpolation (MFI) [[3]](#references).
 
