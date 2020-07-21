@@ -1,5 +1,5 @@
 <p align="center">
-<img src="OCTOPUSLogo_rect.png"/>
+<img src="OCTOPUSLogo_Rect.png"/>
 </p>
 
 # OCTOPUS: Off-resonance CorrecTion OPen-soUrce Software
