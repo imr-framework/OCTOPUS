@@ -3,11 +3,11 @@
 </p>
 
 # OCTOPUS: Off-resonance CorrecTion OPen-soUrce Software
-OCTOPUS is an open-source tool that provides off-resonance correction  methods for  Magnetic Resonance (MR) images. In particular, the implemented techniques are Conjugate Phase Reconstruction (CPR)[[1]](#references), frequency-segmented CPR [[2]](#references) and Multi-Frequency Interpolation (MFI) [[3]](#references).
+`OCTOPUS` is an open-source tool that provides off-resonance correction  methods for  Magnetic Resonance (MR) images. In particular, the implemented techniques are Conjugate Phase Reconstruction (CPR)[[1]](#references), frequency-segmented CPR [[2]](#references) and Multi-Frequency Interpolation (MFI) [[3]](#references).
 
 Off-resonance is a type of MR image artifact. It originates as an accumulation of phase from off-resonant spins along the read-out direction due to field inhomogeneities, tissue susceptibilities and chemical shift among other possible sources [[4]](#references). Long read-out k-space trajectories are therefore more prone to this artifact and its consequences on the image. The image effects are tipycally blurring and/or geometrical distortion, and consequently, quality deterioration [[5]](#references).
 
-OCTOPUS leverages existing techniques and outputs artifact-corrected or mitigated image reconstruction given the raw data from the scanner, k-space trajectory and field map. It is targeted to MR scientists, researchers, engineers and students who work with off-resonance-prone trajectories, such as spirals.
+`OCTOPUS` leverages existing techniques and outputs artifact-corrected or mitigated image reconstruction given the raw data from the scanner, k-space trajectory and field map. It is targeted to MR scientists, researchers, engineers and students who work with off-resonance-prone trajectories, such as spirals.
 
 To learn more about the used methods and their implementation visit the [API docs][api-docs].
 
@@ -50,7 +50,7 @@ Lx =    # L=Lmin * Lx
 6. Run the script.
 The program will display an image panel with the original image and the corrected versions.
 
-## Skip the installation! - OCTOPUS in your browser
+## Skip the installation! - `OCTOPUS` in your browser
 
 There's no need to go through the installation process. Using this [template][colab-template] you can now run off-resonance correction in your browser!
 
