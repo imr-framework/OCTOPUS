@@ -16,7 +16,6 @@ import os
 from OCTOPUS.utils.get_data_from_file import get_data_from_file
 from OCTOPUS.Recon.rawdata_recon import fmap_recon
 from OCTOPUS.Recon.rawdata_recon import spiral_recon
-from OCTOPUS.Recon.read_dicom import read_dicom
 from OCTOPUS.utils.plot_results import plot_correction_results
 
 import OCTOPUS.ORC as ORC

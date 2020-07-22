@@ -9,7 +9,7 @@ Off-resonance is a type of MR image artifact. It originates as an accumulation o
 
 OCTOPUS leverages existing techniques and outputs artifact-corrected or mitigated image reconstruction given the raw data from the scanner, k-space trajectory and field map. It is targeted to MR scientists, researchers, engineers and students who work with off-resonance-prone trajectories, such as spirals.
 
-To learn more about the used methods and their implementation visit the API docs.
+To learn more about the used methods and their implementation visit the [API docs][api-docs].
 
 ## Installation
 1. Install Python (>=Python 3.6)
@@ -17,12 +17,14 @@ To learn more about the used methods and their implementation visit the API docs
 3. Copy and paste this command in your terminal
 ```pip install MR-OCTOPUS```
 
+**Otherwise, [skip the installation!]** <mark>Run `OCTOPUS` in your browser instead.</mark>
+
 ## Quick start
 The [Examples folder] contains scripts and data to run off-resonance correction on numerical simulations and phantom images for different k-space trajectories and field maps.
 
-After the [installation] is completed, download the [example data]. Now you can run two types of demos.
+After the [installation] is completed, download the [example data]. Now you can run two types of demos. More information about these and other experiments can be found in the [Wiki page].
 
-### Numerical simulations
+### 1. Numerical simulations
 
 `numsim_cartesian.py` and `numsim_spiral.py` run a forward model on a 192x192 Shepp-Logan phantom image. They simulate the off-resonance effect of a cartesian and spiral k-space trajectory, respectively, given a simulated field map.
 
@@ -30,7 +32,7 @@ With `OCTOPUS.Fieldmap.fieldmap_gen` you can experiment the effect of the type o
 
 The corrupted image is then corrected using CPR, fs-CPR and MFI and the results are displayed.
 
-### Real data
+### 2. In vitro experiment
 If you want to use `OCTOPUS` to correct real data, you can use `ORC_main.py` as a template.
 1. Fill the `settings.ini` file with the paths for your inputs and outputs. NOTE: the default settings are configured to run the script using the sample data provided.
 2. Input your field of view (FOV), gradient raster time (dt), and echo time (TE).
@@ -48,6 +50,12 @@ Lx =    # L=Lmin * Lx
 6. Run the script.
 The program will display an image panel with the original image and the corrected versions.
 
+## Skip the installation! - OCTOPUS in your browser
+
+There's no need to go through the installation process. Using this [template][colab-template] you can now run off-resonance correction in your browser!
+
+As a demo, you can use the [example data] provided for the [in vitro experiment].
+
 ## Contributing and Community guidelines
 `OCTOPUS` adheres to a code of conduct adapted from the [Contributor Covenant] code of conduct.
 Contributing guidelines can be found [here][contrib-guidelines].
@@ -59,9 +67,13 @@ Contributing guidelines can be found [here][contrib-guidelines].
 4. Noll, D. C., Meyer, C. H., Pauly, J. M., Nishimura, D. G. and Macovski, A. (1991), A homogeneity correction method for magnetic resonance imaging with time-varying gradients. IEEE Transactions on Medical Imaging, 10(4): 629-637. doi: 10.1109/42.108599
 5. Schomberg, H. (1999), Off-resonance correction of MR images. IEEE Transactions on Medical Imaging, 18( 6): 481-495. doi: 10.1109/42.781014
 
-[api-docs]: https://pypulseq.readthedocs.io/en/latest
+[api-docs]: https://mr-octopus.readthedocs.io/en/latest/
 [Contributor Covenant]: http://contributor-covenant.org
 [contrib-guidelines]: https://github.com/imr-framework/OCTOPUS/blob/master/CONTRIBUTING.md
 [installation]: #installation
+[in vitro experiment]: ###2.invitroexperiment
 [Examples folder]: https://github.com/imr-framework/OCTOPUS/tree/master/OCTOPUS/Examples
 [example data]: https://github.com/imr-framework/OCTOPUS/blob/master/OCTOPUS/Examples/examples_zip.zip
+[colab-template]: https://colab.research.google.com/drive/1hEIj5LaF19yOaWkSqi2uWXyy3u6UgKoP?usp=sharing
+[skip the installation!]: #skiptheinstalation!-OCTOPUSinyourbrowser
+[Wiki page]: https://github.com/imr-framework/OCTOPUS/wiki
