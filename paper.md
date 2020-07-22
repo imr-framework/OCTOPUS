@@ -41,6 +41,7 @@ Most of the mentioned implementations are MATLAB-based, restricting the portabil
 # Short demo
 
 To illustrate the usage of the package we performed in silico numerical simulations using a Cartesian trajectory, a spiral trajectory and a simulated field map. The procedure steps were:
+
 1. Forward model simulation of off-resonance effect on a 192x192 Shepp-Logan phantom (Figure 1.A).
 
    + Using a Cartesian trajectory (Figure 1.B) and a simulated field map (Figure 1.D) with frequency ranges of -/+ 1600, -/+3200 and -/+4800 Hz.
