@@ -36,7 +36,7 @@ One can find limited off-resonance correction capabilities within existing packa
 
 Furthermore, all of them are highly specific, defined for a particular k-space trajectory, application and/or include a single correction method. These limitations typically lead researchers to adjust their data in an attempt to fit it into the available pipelines or to write their own version of the methods.  Either approach results in a significant investment of time and effort and can generate isolated implementations and inconsistent results. Most of the mentioned implementations are MATLAB-based, restricting the portability, accessibility and customization of the code [Ravi et al., MRI 2018]. 
 
-`OCTOPUS` - a Google colab notebook compatible implementation - is aimed at filling this gap in MR off-resonance correction packages. It provides Python open-source code for three fundamental methods (CPR, fs-CPR and MFI). The implementation is independent of the application and the image acquisition scheme, easing its integration into any reconstruction pipepeline.  `OCTOPUS` is a zero-footprint software  given that it can also run in a web browser.
+`OCTOPUS` - a Google colab notebook compatible implementation - is aimed at filling this gap in MR off-resonance correction packages. It provides Python open-source code for three fundamental methods (CPR, fs-CPR and MFI). The implementation is independent of the application and the image acquisition scheme, easing its integration into any reconstruction pipepeline.  `OCTOPUS` is the first zero-footprint off-resonance correction software  given that it can also run in a web browser.
 
 # Short demo
 
