@@ -157,6 +157,37 @@ volume = {62},
 year = {2012}
 }
 
+@article{Sutton2003,
+abstract = {In magnetic resonance imaging, magnetic field inhomogeneities cause distortions in images that are reconstructed by conventional last Fourier transform (FFT) methods. Several noniterative image reconstruction methods are used currently to compensate for field inhomogeneities, but these methods assume that the field map that characterizes the off-resonance frequencies is spatially smooth. Recently, iterative methods have been proposed that can circumvent this assumption and provide improved compensation for off-resonance effects. However, straightforward implementations of such iterative methods suffer from inconveniently long computation times. This paper describes a tool for accelerating iterative reconstruction of field-corrected MR images: a novel time-segmented approximation to the MR signal equation. We use a min-max formulation to derive the temporal interpolator. Speedups of around 60 were achieved by combining this temporal interpolator with a nonuniform fast Fourier transform with normalized root mean squared approximation errors of 0.07{\%}. The proposed method provides fast, accurate, field-corrected image reconstruction even when the field map is not smooth.},
+author = {Sutton, Bradley P. and Noll, Douglas C. and Fessler, Jeffrey A.},
+doi = {10.1109/TMI.2002.808360},
+issn = {02780062},
+journal = {IEEE Transactions on Medical Imaging},
+keywords = {Field inhomogeneity correction,Image reconstruction,Iterative methods,Magnetic resonance imaging,Temporal interpolation,Time segmentation},
+mendeley-groups = {OCTOPUS-JOSS},
+number = {2},
+pages = {178--188},
+pmid = {12715994},
+title = {{Fast, iterative image reconstruction for MRI in the presence of field inhomogeneities}},
+volume = {22},
+year = {2003}
+}
+
+@article{Fessler2005,
+abstract = {In some types of magnetic resonance (MR) imaging, particularly functional brain scans, the conventional Fourier model for the measurements is inaccurate. Magnetic field inhomogeneities, which are caused by imperfect main fields and by magnetic susceptibility variations, induce distortions in images that are reconstructed by conventional Fourier methods. These artifacts hamper the use of functional MR imaging (fMRI) in brain regions near air/tissue interfaces. Recently, iterative methods that combine the conjugate gradient (CG) algorithm with nonuniform FFT (NUFFT) operations have been shown to provide considerably improved image quality relative to the conjugate-phase method. However, for non-Cartesian k-space trajectories, each CG-NUFFT iteration requires numerous k-space interpolations; these are operations that are computationally expensive and poorly suited to fast hardware implementations. This paper proposes a faster iterative approach to field-corrected MR image reconstruction based on the CG algorithm and certain Toeplitz matrices. This CG-Toeplitz approach requires k-space interpolations only for the initial iteration; thereafter, only fast Fourier transforms (FFTs) are required. Simulation results show that the proposed CG-Toeplitz approach produces equivalent image quality as th CG-NUFFT method with significantly reduced computation time. {\textcopyright} 2005 IEEE.},
+author = {Fessler, Jeffrey A. and Lee, Sangwoo and Olafsson, Valur T. and Shi, Hugo R. and Noll, Douglas C.},
+doi = {10.1109/TSP.2005.853152},
+issn = {1053587X},
+journal = {IEEE Transactions on Signal Processing},
+keywords = {Magnetic susceptibility,Non-Cartesian sampling,Spiral trajectory,fMRI imaging},
+mendeley-groups = {OCTOPUS-JOSS},
+number = {9},
+pages = {3393 -- 3402},
+title = {{Toeplitz-based iterative image reconstruction for MRI with correction for magnetic field inhomogeneity}},
+volume = {53},
+year = {2005}
+}
+
 @phdthesis{Nylund2014,
 author = {Nylund, Andreas},
 mendeley-groups = {OCTOPUS-JOSS},
