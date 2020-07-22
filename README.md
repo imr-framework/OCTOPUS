@@ -76,4 +76,4 @@ Contributing guidelines can be found [here][contrib-guidelines].
 [example data]: https://github.com/imr-framework/OCTOPUS/blob/master/OCTOPUS/Examples/examples_zip.zip
 [colab-template]: https://colab.research.google.com/drive/1hEIj5LaF19yOaWkSqi2uWXyy3u6UgKoP?usp=sharing
 [skip the installation!]: #skip-the-installation---octopus-in-your-browser
-[Wiki page]: https://github.com/imr-framework/OCTOPUS/wiki
+[Wiki page]: https://github.com/imr-framework/OCTOPUS/wiki/Welcome-to-the-OCTOPUS-wiki!
