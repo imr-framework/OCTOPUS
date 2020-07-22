@@ -71,9 +71,9 @@ Contributing guidelines can be found [here][contrib-guidelines].
 [Contributor Covenant]: http://contributor-covenant.org
 [contrib-guidelines]: https://github.com/imr-framework/OCTOPUS/blob/master/CONTRIBUTING.md
 [installation]: #installation
-[in vitro experiment]: ###2.invitroexperiment
+[in vitro experiment]: #2.-in-vitro-experiment
 [Examples folder]: https://github.com/imr-framework/OCTOPUS/tree/master/OCTOPUS/Examples
 [example data]: https://github.com/imr-framework/OCTOPUS/blob/master/OCTOPUS/Examples/examples_zip.zip
 [colab-template]: https://colab.research.google.com/drive/1hEIj5LaF19yOaWkSqi2uWXyy3u6UgKoP?usp=sharing
-[skip the installation!]: #skiptheinstalation!-OCTOPUSinyourbrowser
+[skip the installation!]: #skip-the-installation!-OCTOPUS-in-your-browser
 [Wiki page]: https://github.com/imr-framework/OCTOPUS/wiki
