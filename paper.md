@@ -34,7 +34,7 @@ Multiple successful off-resonance correction methods have been reported by the l
 
 One can find limited off-resonance correction capabilities within existing packages. Examples are: SPIRiT [@Lustig2010], a MATLAB-based approach for autocallibrated parallel imaging reconstruction; Ostenson's MFI implementation for Magnetic Resonance Fingerprinting (MRF) [@Ostenson2017]; FUGUE, a tool for Echo-Planar Imaging (EPI) distortion correction part of the FSL library [@Jenkinson2012]; and the MIRT toolbox, a MATLAB-based MRI reconstruction package that offers field inhomogeneity correction using iterative reconstruction methods[@Sutton2003; @Fessler2005]. Nylund's thesis [@Nylund2014] also contains source MATLAB code for fs-CPR and MFI correction of spiral images.
 
-Furthermore, all of them are highly specific, defined for a particular k-space trajectory, application and/or include a single correction method. These limitations typically lead researchers to adjust their data in an attempt to fit it into the available pipelines or to write their own version of the methods.  Either approach results in a significant investment of time and effort and can generate isolated implementations and inconsistent results. Most of the mentioned implementations are MATLAB-based, restricting the portability, accessibility and customization of the code [Ravi et al., MRI 2018]. 
+Furthermore, all of them are highly specific, defined for a particular k-space trajectory, application and/or include a single correction method. These limitations typically lead researchers to adjust their data in an attempt to fit it into the available pipelines or to write their own version of the methods.  Either approach results in a significant investment of time and effort and can generate isolated implementations and inconsistent results. Most of the mentioned implementations are also MATLAB-based, restricting the portability, accessibility and customization of the code [@Ravi2018]. 
 
 `OCTOPUS` - a Google colab notebook compatible implementation - is aimed at filling this gap in MR off-resonance correction packages. It provides Python open-source code for three fundamental methods (CPR, fs-CPR and MFI). The implementation is independent of the application and the image acquisition scheme, easing its integration into any reconstruction pipepeline.  `OCTOPUS` is the first zero-footprint off-resonance correction software  given that it can also run in a web browser.
 
@@ -47,7 +47,7 @@ To illustrate the usage of the package we performed in silico numerical simulati
    + Using a Cartesian trajectory (Figure 1.B) and a simulated field map (Figure 1.D) with frequency ranges of -/+ 1600, -/+3200 and -/+4800 Hz.
 
    + Using a spiral trajectory (Figure 1.C) and a simulated field map (Figure 1.D) with frequency ranges of -/+ 250, -/+ 500 and -/+ 750 Hz.
-   
+
 2. Correction of the results of the forward model (Figure 1.E and Figure 1.F, first column) with CPR, fs-CPR and MFI (Figure 1.E and Figure 1.F, second-fourth columns).
 
 ![Figure 1: A) Shepp-Logan phantom image (192x192). B) Cartesian k-space trajectory. C) Spiral k-space trajectory. D) Simulated field map (192x192). E) Cartesian experiment results. F) Spiral experiment results.](JOSS_figs/Imagen7.png)
