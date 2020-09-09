@@ -25,7 +25,6 @@ def read_dicom(path):
     data = dcmread(path)
     # Get the image data
     vol = data.pixel_array
-    vol = np.fliplr(vol)
     return vol
 
 
