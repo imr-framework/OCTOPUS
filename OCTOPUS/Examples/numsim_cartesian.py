@@ -8,7 +8,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import cv2
 
-import OCTOPUS.fieldmap.fieldmap_gen as fieldmap_gen
+import OCTOPUS.fieldmap.simulate as fieldmap_sim
 import OCTOPUS.ORC as ORC
 from OCTOPUS.utils.plotting import plot_correction_results
 from OCTOPUS.utils.metrics import create_table
@@ -49,7 +49,7 @@ def numsim_cartesian():
     or_corrected_fsCPR = np.zeros((N, N, len(fmax_v)), dtype='complex')
     or_corrected_MFI = np.zeros((N, N, len(fmax_v)), dtype='complex')
     for fmax in fmax_v:
-        field_map = fieldmap_gen.realistic(np.abs(ph), fmax)
+        field_map = fieldmap_sim.realistic(np.abs(ph), fmax)
 
         ### For reproducibility
         # dst = np.zeros((N,N))

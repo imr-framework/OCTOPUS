@@ -10,7 +10,7 @@ import cv2
 import matplotlib.pyplot as plt
 
 import OCTOPUS.ORC as ORC
-import OCTOPUS.fieldmap.fieldmap_gen as fieldmap_gen
+import OCTOPUS.fieldmap.simulate as fieldmap_sim
 from OCTOPUS.utils.plotting import plot_correction_results
 from OCTOPUS.utils.metrics import create_table
 ##
@@ -53,7 +53,7 @@ def numsim_spiral():
     or_corrected_MFI = np.zeros((N, N, len(fmax_v)), dtype='complex')
     for fmax  in fmax_v:
 
-        field_map = fieldmap_gen.realistic(np.abs(ph), fmax)
+        field_map = fieldmap_sim.realistic(np.abs(ph), fmax)
         ### For reproducibility
         # dst = np.zeros((N, N))
         # field_map = cv2.normalize(np.load('M2.npy'), dst, -fmax, fmax, cv2.NORM_MINMAX)
