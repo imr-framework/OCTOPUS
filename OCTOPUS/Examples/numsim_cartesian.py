@@ -10,7 +10,7 @@ import cv2
 
 import OCTOPUS.Fieldmap.fieldmap_gen as fieldmap_gen
 import OCTOPUS.ORC as ORC
-from OCTOPUS.utils.plot_results import plot_correction_results
+from OCTOPUS.utils.plotting import plot_correction_results
 from OCTOPUS.utils.metrics import create_table
 
 ##

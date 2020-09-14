@@ -7,7 +7,7 @@ Last updated: 07/08/2020
 import numpy as np
 import configparser
 from OCTOPUS.Recon.read_dicom import read_dicom
-from OCTOPUS.utils.plot_results import plot_correction_results
+from OCTOPUS.utils.plotting import plot_correction_results
 from OCTOPUS.utils.metrics import create_table
 
 
@@ -40,20 +40,21 @@ for path in data_paths:
     sos_fsCPR = np.divide(np.sum(np.abs(vol_fsCPR), -1), np.max(np.sum(np.abs(vol_fsCPR), -1)))
     sos_MFI = np.divide(np.sum(np.abs(vol_MFI), -1), np.max(np.sum(np.abs(vol_MFI), -1)))
 
-    GS.append(vol_GS)
-    uncorrected.append(np.rot90(vol_uncorr,-1))
-    CPR.append(np.rot90(sos_CPR, -1))
-    fs_CPR.append(np.rot90(sos_fsCPR, -1))
-    MFI.append(np.rot90(sos_MFI,-1))
+    GS.append(np.rot90(vol_GS))
+    uncorrected.append(np.rot90(vol_uncorr,0))
+    CPR.append(np.rot90(sos_CPR, 0))
+    fs_CPR.append(np.rot90(sos_fsCPR, 0))
+    MFI.append(np.rot90(sos_MFI,0))
 
-GS = np.moveaxis(np.squeeze(np.stack(GS)), 0, -1)
-uncorrected = np.moveaxis(np.stack(np.squeeze(uncorrected)), 0, -1)
-CPR = np.moveaxis(np.stack(np.squeeze(CPR)), 0, -1)
-fs_CPR = np.moveaxis(np.stack(np.squeeze(fs_CPR)), 0, -1)
-MFI = np.moveaxis(np.stack(np.squeeze(MFI)), 0, -1)
+GS = np.fliplr(np.moveaxis(np.squeeze(np.stack(GS)), 0, -1))
+uncorrected = np.fliplr(np.moveaxis(np.stack(np.squeeze(uncorrected)), 0, -1))
+CPR = np.fliplr(np.moveaxis(np.stack(np.squeeze(CPR)), 0, -1))
+fs_CPR = np.fliplr(np.moveaxis(np.stack(np.squeeze(fs_CPR)), 0, -1))
+MFI = np.fliplr(np.moveaxis(np.stack(np.squeeze(MFI)), 0, -1))
 
 cols = ('Gold Standard','Corrupted Image','CPR Correction', 'fs-CPR Correction', 'MFI Correction')
-rows = ('Shimmed', 'Mid-shimmed', 'Not shimmed')
+#rows = ('Shimmed', 'Mid-shimmed', 'Not shimmed')
+rows = ('X shim = 0',)
 im_stack = np.stack((GS, uncorrected, CPR, fs_CPR, MFI))
 
 plot_correction_results(im_stack, cols, rows)
