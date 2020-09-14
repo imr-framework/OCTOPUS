@@ -14,8 +14,8 @@ import time
 import os
 
 from OCTOPUS.utils.get_data_from_file import get_data_from_file
-from OCTOPUS.Recon.rawdata_recon import fmap_recon
-from OCTOPUS.Recon.rawdata_recon import spiral_recon
+from OCTOPUS.recon.rawdata_recon import fmap_recon
+from OCTOPUS.recon.rawdata_recon import spiral_recon
 from OCTOPUS.utils.plotting import plot_correction_results
 
 import OCTOPUS.ORC as ORC
