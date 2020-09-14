@@ -8,7 +8,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import cv2
 
-import OCTOPUS.Fieldmap.fieldmap_gen as fieldmap_gen
+import OCTOPUS.fieldmap.fieldmap_gen as fieldmap_gen
 import OCTOPUS.ORC as ORC
 from OCTOPUS.utils.plotting import plot_correction_results
 from OCTOPUS.utils.metrics import create_table

@@ -11,7 +11,7 @@ import numpy.fft as fft
 import math
 
 from OCTOPUS.utils.get_data_from_file import get_data_from_file
-from OCTOPUS.Recon.imtransforms import nufft_init, ksp2im
+from OCTOPUS.recon.imtransforms import nufft_init, ksp2im
 
 def mask_by_threshold(im):
     '''
