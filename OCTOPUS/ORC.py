@@ -10,7 +10,7 @@ import numpy as np
 
 from math import ceil, pi
 
-from OCTOPUS.Recon.imtransforms import ksp2im, im2ksp, nufft_init
+from OCTOPUS.recon.imtransforms import ksp2im, im2ksp, nufft_init
 
 def add_or(M, kt, df, nonCart = None, params = None):
     '''Forward model for off-resonance simulation
@@ -151,7 +151,7 @@ def CPR(dataIn, dataInType, kt, df, nonCart=None, params=None):
     dataInType : str
         Can be either 'raw' or 'im'
     kt : numpy.ndarray
-        k-space trajectory
+        k-space trajectory.
     df : numpy.ndarray
         Field map
     nonCart : int
@@ -293,7 +293,6 @@ def fs_CPR(dataIn, dataInType, kt, df, Lx, nonCart= None, params= None):
 
 def MFI(dataIn, dataInType, kt , df, Lx , nonCart= None, params= None):
     '''Off-resonance Correction by Multi-Frequency Interpolation
-
     Parameters
     ----------
     dataIn : numpy.ndarray
@@ -310,7 +309,6 @@ def MFI(dataIn, dataInType, kt , df, Lx , nonCart= None, params= None):
         Non-cartesian trajectory option. Default is None (Cartesian).
     params : dict
         Sequence parameters. Default is None.
-
     Returns
     -------
     M_hat : numpy.ndarray
