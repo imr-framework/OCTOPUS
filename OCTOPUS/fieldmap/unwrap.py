@@ -15,7 +15,7 @@ from pydicom import dcmread
 from OCTOPUS.utils.get_data_from_file import get_data_from_file
 from OCTOPUS.recon.rawdata_recon import mask_by_threshold
 
-def phase_unwrap_prep(data_path_raw, data_path_dicom, dst_folder, dTE):
+def fsl_prep(data_path_raw, data_path_dicom, dst_folder, dTE):
     '''
     Prepares a Siemens fieldmap for phase unwrapping using FSL. Saves a phase difference image and a magnitude image with
     the ROI extracted in niftii format to use as inputs for FSL.
