@@ -3,6 +3,26 @@
 Methods for ORC (Off-Resonance Correction) and off-resonance simulation
 \nAuthor: Marina Manso Jimeno
 \nLast updated: 07/14/2020
+
+\n Some comments on data input and output:
+\n At the current stage, the methods apply a 2D reconstruction only. Therefore, data input and output will be two-dimensional.
+\n For **image data**:
+    Input: 2D image [N, N]
+    Output: 2D image [N, N]
+\n For **raw data**:
+\n  Cartesian
+\n      Input: 2D array [Lines, Columns]
+\n      Output: 2D image [N, N]
+\n  Non-Cartesian
+\n      Input: 2D array [Npoints, Nshots]
+\n      Output: 2D image [N, N]
+\n Note that when the input data corresponds to a **non-cartesian** trajectory, extra details are needed. Those should be grouped into a dictionary and should include:
+\n    Npoints :  Number of points per shot
+\n    Nshots : Number of shots
+\n    N : matrix size of the output image
+\n    t_ro : read-out time of one shot in seconds
+\n    T : Time map of each point (with respect to the RF pulse) in seconds
+
 '''
 
 import numpy.fft as npfft
