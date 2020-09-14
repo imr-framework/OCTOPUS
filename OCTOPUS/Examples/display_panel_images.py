@@ -6,7 +6,7 @@ Last updated: 07/08/2020
 '''
 import numpy as np
 import configparser
-from OCTOPUS.recon.read_dicom import read_dicom
+from OCTOPUS.utils.dataio import read_dicom
 from OCTOPUS.utils.plotting import plot_correction_results
 from OCTOPUS.utils.metrics import create_table
 

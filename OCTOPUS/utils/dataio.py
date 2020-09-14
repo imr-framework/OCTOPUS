@@ -37,3 +37,27 @@ def get_data_from_file(input):
         raise ValueError('Sorry, this file format is not supported:' + (file_format))
 
     return file_data
+
+from pydicom import dcmread
+
+
+def read_dicom(path):
+    '''
+    Reads dicom file from path
+
+    Parameters
+    ----------
+    path : str
+        Path of the file
+
+    Returns
+    -------
+    vol : np.ndarray
+        Array containing the image volume
+    '''
+    data = dcmread(path)
+    # Get the image data
+    vol = data.pixel_array
+    return vol
+
+

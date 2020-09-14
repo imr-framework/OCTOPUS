@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 
 from pydicom import dcmread
 
-from OCTOPUS.utils.get_data_from_file import get_data_from_file
+from OCTOPUS.utils.dataio import get_data_from_file
 from OCTOPUS.recon.rawdata_recon import mask_by_threshold
 
 def fsl_prep(data_path_raw, data_path_dicom, dst_folder, dTE):
