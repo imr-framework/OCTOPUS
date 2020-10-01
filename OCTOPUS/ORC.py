@@ -163,6 +163,7 @@ def orc(M, kt, df):
 
 def CPR(dataIn, dataInType, kt, df, nonCart=None, params=None):
     '''Off-resonance Correction by Conjugate Phase Reconstruction
+    Maeda, A., Sano, K. and Yokoyama, T. (1988), Reconstruction by weighted correlation for MRI with time-varying gradients. IEEE Transactions on Medical Imaging, 7(1): 26-31. doi: 10.1109/42.3926
 
     Parameters
     ----------
@@ -226,6 +227,7 @@ def CPR(dataIn, dataInType, kt, df, nonCart=None, params=None):
 
 def fs_CPR(dataIn, dataInType, kt, df, Lx, nonCart= None, params= None):
     '''Off-resonance Correction by frequency-segmented Conjugate Phase Reconstruction
+    Noll, D. C., Pauly, J. M., Meyer, C. H., Nishimura, D. G. and Macovskj, A. (1992), Deblurring for non‐2D fourier transform magnetic resonance imaging. Magn. Reson. Med., 25: 319-333. doi:10.1002/mrm.1910250210
 
     Parameters
     ----------
@@ -313,6 +315,8 @@ def fs_CPR(dataIn, dataInType, kt, df, Lx, nonCart= None, params= None):
 
 def MFI(dataIn, dataInType, kt , df, Lx , nonCart= None, params= None):
     '''Off-resonance Correction by Multi-Frequency Interpolation
+    Man, L., Pauly, J. M. and Macovski, A. (1997), Multifrequency interpolation for fast off‐resonance correction. Magn. Reson. Med., 37: 785-792. doi:10.1002/mrm.1910370523
+
     Parameters
     ----------
     dataIn : numpy.ndarray
@@ -334,6 +338,7 @@ def MFI(dataIn, dataInType, kt , df, Lx , nonCart= None, params= None):
     M_hat : numpy.ndarray
         Corrected image data.
     '''
+
     if nonCart is not None:
         cartesian_opt = 0
         NufftObj = nufft_init(kt, params)

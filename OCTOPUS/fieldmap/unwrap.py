@@ -73,17 +73,18 @@ def fsl_prep(data_path_raw, data_path_dicom, dst_folder, dTE):
     echo1 = echo1[oversamp_factor:-oversamp_factor, :, :, :]
     echo2 = echo2[oversamp_factor:-oversamp_factor, :, :, :]
 
-    echo1 = echo1[:,:,sl_order,:]
+    # echo1 = echo1[:,:,sl_order,:]
     # Magnitude image with object 'brain' extracted
-    mag_im = np.sum(np.abs(echo1), -1)
+    mag_im = np.sqrt(np.sum(np.abs(echo1) ** 2, -1))
+    #mag_im = np.sum(np.abs(echo1), -1)
     mag_im = np.divide(mag_im, np.max(mag_im))
 
 
-    im = np.zeros((128, 128 * 20))
+    '''im = np.zeros((128, 128 * 20))
     for i in range(20):
         im[:, int(128 * i):int(128 * (i + 1))] = mag_im[:, :, i]
     plt.imshow(im)
-    plt.show()
+    plt.show()'''
 
 
     brain_mask = mask_by_threshold(mag_im)
@@ -93,16 +94,19 @@ def fsl_prep(data_path_raw, data_path_dicom, dst_folder, dTE):
     nib.save(img, os.path.join(dst_folder, 'mag_vol_extracted.nii.gz'))
 
     # Phase difference image from DICOM data
-    if data_path_dicom[-4] != '.dcm' or data_path_dicom[-4:] != '.IMA':
+    #TODO: have to fix this logic
+    if os.path.isdir(data_path_dicom):
         # multi-slice
         files_in_folder = os.listdir(data_path_dicom)
         vol = np.zeros((N, N, Nslices))
         for file, idx in zip(files_in_folder, range(Nslices)):
             vol[:,:,idx] = dcmread(os.path.join(data_path_dicom,file)).pixel_array
-    else:
+    elif data_path_dicom[-4:] == '.dcm' or data_path_dicom[-4:] == '.IMA':
         data = dcmread(data_path_dicom)
         # Get the image data
         vol = data.pixel_array
+    else:
+        vol = get_data_from_file(data_path_dicom)
     # Save as niftii
 
     img = nib.Nifti1Image(vol, np.eye(4))

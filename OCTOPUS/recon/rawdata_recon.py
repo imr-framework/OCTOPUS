@@ -240,11 +240,13 @@ def spiral_recon(data, ktraj, N, plot = 0, save = 0, dst_folder = None):
             im[:,:,sl,ch] = ksp2im(dat[:,:,sl,ch], 0, NUFFT_object, {'N': N, 'Npoints': Npoints, 'Nshots': Nshots})#NufftObj.solve(dat[:,:,sl,ch].flatten(), solver='cg', maxiter=50)
 
 
-    sos = np.sum(np.abs(im), -1)
+    #sos = np.sum(np.abs(im), -1)
+    sos = np.sqrt(np.sum(np.abs(im) ** 2, -1))
     sos = np.divide(sos, np.max(sos))
 
     if plot:
-        plt.imshow(np.rot90(np.abs(sos[:,:,0]),-1), cmap='gray')
+        #plt.imshow(np.rot90(np.abs(sos[:,:,0]),-1), cmap='gray')
+        plt.imshow(sos[:, :, 0], cmap='gray')
         plt.axis('off')
         plt.title('Uncorrected Image')
         plt.show()

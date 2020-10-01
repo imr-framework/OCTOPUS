@@ -152,8 +152,8 @@ def realistic(im , fmax , bin_opt = True, bin_val = 5):
     N = im.shape[0]
     hist = np.histogram(im)
     mask1= cv2.threshold(im, hist[1][hist[0].argmax()+1], 1, cv2.THRESH_BINARY)
-    mask2 = cv2.threshold(im, hist[1][hist[0].argmax()], 1, cv2.THRESH_BINARY_INV)
-    mask = mask1[1] + mask2[1]
+    #mask2 = cv2.threshold(im, hist[1][hist[0].argmax()], 1, cv2.THRESH_BINARY_INV)
+    mask = mask1[1] #+ mask2[1]
 
     np.random.seed(123)
     M = np.random.rand(2, 2)
