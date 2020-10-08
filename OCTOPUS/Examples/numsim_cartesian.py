@@ -13,14 +13,17 @@ import OCTOPUS.ORC as ORC
 from OCTOPUS.utils.plotting import plot_correction_results
 from OCTOPUS.utils.metrics import create_table
 
+from skimage.data import shepp_logan_phantom
+from skimage.transform import resize
 ##
 # Original image: Shep-Logan Phantom
 ##
 
 def numsim_cartesian():
-    ph = np.load('sample_data/slph_im.npy').astype(complex) # Shep-Logan Phantom
-    ph = (ph - np.min(ph)) / (np.max(ph)-np.min(ph)) # Normalization
-    N = ph.shape[0]
+    '''ph = np.load('sample_data/slph_im.npy').astype(complex) # Shep-Logan Phantom
+    ph = (ph - np.min(ph)) / (np.max(ph)-np.min(ph)) # Normalization'''
+    N = 192#ph.shape[0]
+    ph = resize(shepp_logan_phantom(), (N,N)).astype(complex)
     plt.imshow(np.abs(ph), cmap='gray')
     plt.title('Original phantom')
     plt.axis('off')
