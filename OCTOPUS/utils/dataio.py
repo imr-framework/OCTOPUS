@@ -6,6 +6,7 @@ Last modified: 07/21/2020
 import numpy as np
 import scipy.io as sio
 import nibabel as nib
+import os
 
 def get_data_from_file(input):
     '''
@@ -48,16 +49,22 @@ def read_dicom(path):
     Parameters
     ----------
     path : str
-        Path of the file
+        Path of the file/dicom folder
 
     Returns
     -------
     vol : np.ndarray
         Array containing the image volume
     '''
-    data = dcmread(path)
+    vol = []
+    if os.path.isdir(path):
+        for files_in in os.listdir(path):
+            vol.append(dcmread(os.path.join(path, files_in)).pixel_array)
+        vol = np.moveaxis(np.stack(vol), 0, -1)
+    elif os.path.isfile(path):
+        data = dcmread(path)
     # Get the image data
-    vol = data.pixel_array
+        vol = data.pixel_array
     return vol
 
 
