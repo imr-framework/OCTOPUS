@@ -2,7 +2,7 @@
 '''
 Methods to do k-space to image and image to k-space for both Cartesian and non-cartesian data
 \nAuthor: Marina Manso Jimeno
-\nLast updated: 07/18/2020
+\nLast updated: 10/07/2020
 '''
 
 import numpy.fft as npfft
@@ -64,16 +64,29 @@ def ksp2im(ksp, cartesian_opt, NufftObj=None, params=None):
     im : numpy.ndarray
         Image data
     '''
+
     if cartesian_opt == 1:
         im = npfft.ifft2(npfft.fftshift(ksp))
+        #im = npfft.ifftshift(npfft.ifft2(ksp))
 
     elif cartesian_opt == 0:
+
+        if 'Npoints' not in params:
+            raise ValueError('The number of acquisition points is missing')
+        if 'Nshots' not in params:
+            raise ValueError('The number of shots is missing')
+
         if 'dcf' in params:
             ksp_dcf = ksp.reshape((params['Npoints']*params['Nshots'],))*params['dcf']
             im = NufftObj.adjoint(ksp_dcf)  # * np.prod(sqrt(4 * params['N'] ** 2))
         else:
+
             ksp_dcf = ksp.reshape((params['Npoints'] * params['Nshots'],))
             im = NufftObj.solve(ksp_dcf, solver='cg', maxiter=50)
+            #im = NufftObj.solve(ksp_dcf, solver='L1TVOLS', maxiter=50, rho=0.1)
+
+
+
 
 
 
@@ -97,6 +110,13 @@ def nufft_init(kt, params):
     NufftObj : pynufft.linalg.nufft_cpu.NUFFT_cpu
         Non-uniform FFT Object for non-cartesian transformation
     '''
+    if 'Npoints' not in params:
+        raise ValueError('The number of acquisition points is missing')
+    if 'Nshots' not in params:
+        raise ValueError('The number of shots is missing')
+    if 'N' not in params:
+        raise ValueError('The matrix size is missing')
+
     kt_sc = pi / abs(np.max(kt))
     kt = kt * kt_sc # pyNUFFT scaling [-pi, pi]
     om = np.zeros((params['Npoints'] * params['Nshots'], 2))
