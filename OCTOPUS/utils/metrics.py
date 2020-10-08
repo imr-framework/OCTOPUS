@@ -17,44 +17,6 @@ import matplotlib.pyplot as plt
 
 from skimage import data, img_as_float
 
-def SSIM_calc(im1, im2):
-    '''
-    Structural Similarity Index Calculation for two images
-
-    Parameters
-    ----------
-    im1 : nupy.ndarray
-        Image 1. Reference image, same shape as im2
-    im2 : numpy.ndarray
-        Image 2
-
-    Returns
-    -------
-    hfen : float
-        Measured SSIM value
-    '''
-    ssim = SSIM(im1, im2, data_range=im2.max() - im2.min())
-    return ssim
-
-def pSNR_calc(im1,im2):
-    '''
-    Peak Signal to Noise Ratio Calculation for two images
-
-    Parameters
-    ----------
-    im1 : nupy.ndarray
-        Image 1. Reference image, same shape as im2
-    im2 : numpy.ndarray
-        Image 2
-
-    Returns
-    -------
-    hfen : float
-        Measured SSIM value
-    '''
-    psnr = pSNR(im1, im2, data_range=im2.max() - im2.min())
-    return psnr
-
 def LoG(im):
     '''
     Laplacian of a Gaussian implementation with kernel size (15, 15) and sigma equal to 1.5 pixels
