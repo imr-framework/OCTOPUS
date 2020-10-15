@@ -1,25 +1,25 @@
 ---
-title: 'Off-resonance CorrecTion OPen soUrce Software (OCTOPUS)' 
+title: 'Off-resonance CorrecTion OPen soUrce Software (OCTOPUS)'
 tags:
- - Python
- - MRI
- - off-resonance correction 
+  - Python
+  - MRI
+  - off-resonance correction
 authors:
- - name: Marina Manso Jimeno 
-   orcid: 0000-0002-1141-2049 
-   affiliation: 1
- - name: John Thomas Vaughan Jr. 
-   orcid: 0000-0002-6933-3757 
-   affiliation: 1
- - name: Sairam Geethanath 
-   orcid: 0000-0002-3776-4114 
-   affiliation: 1
-affiliations:
- - name: Columbia Magnetic Resonance Research Center, Columbia University
-  in the City of New York, USA 
-   index: 1 date: 21 July 2020 bibliography:
-   paper.bib
+  - name: Marina Manso Jimeno
+    orcid: 0000-0002-1141-2049
+    affiliation: 1
+  - name: John Thomas Vaughan Jr.
+    orcid: 0000-0002-6933-3757
+    affiliation: 1
+  - name: Sairam Geethanath
+    orcid: 0000-0002-3776-4114
+    affiliation: 1
 
+affiliations:
+ - name: Columbia Magnetic Resonance Research Center, Columbia University in the City of New York, USA
+   index: 1
+date: 15 OCTOBER 2020
+bibliography: paper.bib
 ---
 
 # Summary
