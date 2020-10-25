@@ -2,7 +2,27 @@
 '''
 Methods for ORC (Off-Resonance Correction) and off-resonance simulation
 \nAuthor: Marina Manso Jimeno
-\nLast updated: 07/14/2020
+\nLast updated: 10/07/2020
+
+\n Some comments on data input and output:
+\n At the current stage, the methods apply a 2D reconstruction only. Therefore, data input and output will be two-dimensional.
+\n For **image data**:
+    Input: 2D image [N, N]
+    Output: 2D image [N, N]
+\n For **raw data**:
+\n  Cartesian
+\n      Input: 2D array [Lines, Columns]
+\n      Output: 2D image [N, N]
+\n  Non-Cartesian
+\n      Input: 2D array [Npoints, Nshots]
+\n      Output: 2D image [N, N]
+\n Note that when the input data corresponds to a **non-cartesian** trajectory, extra details are needed. Those should be grouped into a dictionary and should include:
+\n    Npoints :  Number of points per shot
+\n    Nshots : Number of shots
+\n    N : matrix size of the output image
+\n    t_ro : read-out time of one shot in seconds
+\n    T : Time map of each point (with respect to the RF pulse) in seconds
+
 '''
 
 import numpy.fft as npfft
@@ -10,7 +30,82 @@ import numpy as np
 
 from math import ceil, pi
 
-from OCTOPUS.Recon.imtransforms import ksp2im, im2ksp, nufft_init
+from OCTOPUS.recon.imtransforms import ksp2im, im2ksp, nufft_init
+
+
+def check_inputs_cartesian(dataInShape, dataInType, ktShape, dfShape):
+    '''Check dimensions of the inputs
+
+    Parameters
+    ----------
+    dataInShape :  tuple
+        Shape of input data. Must be [NxN] for image data and [NlinesxNcolumns] for raw data.
+    dataInType : str
+        Type of data: im or raw
+    ktShape : tuple
+        Shape of k-space trajectory. Must be [NlinesxNcolumns].
+    dfShape : tuple
+        Shape of field map. Must be [NxN] and match the image matrix size.
+    '''
+    if dataInType == 'im':
+        if dataInShape[0] != dataInShape[1]:
+            raise ValueError('Data dimensions do not agree with expected image dimensions (NxN)')
+        if dataInShape != dfShape:
+            raise ValueError('The image and field map dimensions do not match')
+    elif dataInType == 'raw':
+        if dataInShape != ktShape:
+            raise ValueError('The raw data and k-space trajectory dimensions do not match')
+    else:
+        raise ValueError('This type of input data is not supported. Please select im or raw')
+
+
+def check_inputs_noncartesian(dataInShape, dataInType, ktShape, dfShape, params):
+    '''Check dimensions of the inputs
+
+    Parameters
+    ----------
+    dataInShape :  tuple
+        Shape of input data. Must be [NxN] for image data and [NpointsxNshots] for raw data.
+    dataInType : str
+        Type of data: im or raw
+    ktShape : tuple
+        Shape of k-space trajectory. Must be [NpointsxNshots].
+    dfShape : tuple
+        Shape of field map. Must be [NxN] and match the image matrix size.
+    params : dict
+        Sequence parameters. Required elements are Npoints, Nshots, and N.
+    '''
+    if dataInType == 'im':
+        if dataInShape[0] != dataInShape[1]:
+            raise ValueError('Data dimensions do not agree with expected image dimensions (NxN)')
+        if dataInShape != dfShape:
+            raise ValueError('The image and field map dimensions do not match')
+
+    elif dataInType == 'raw':
+        if dataInShape != ktShape:
+            raise ValueError('The raw data and k-space trajectory dimensions do not match')
+
+    else:
+        raise ValueError('This type of input data is not supported. Please select im or raw')
+
+    if 'Npoints' not in params:
+        raise ValueError('The number of acquisition points is missing')
+    if 'Nshots' not in params:
+        raise ValueError('The number of shots is missing')
+    if 'N' not in params:
+        raise ValueError('The matrix size N is missing')
+
+    if params['N'] != dfShape[0]:
+        raise ValueError('The image or field map dimensions and value specified for N do not match')
+
+    if params['Npoints'] != ktShape[0]:
+        raise ValueError('The raw data or trajectory dimensions and value specified for Npoints do not match')
+
+    if params['Nshots'] != ktShape[1]:
+        raise ValueError('The raw data or trajectory dimensions and value specified for Nshots do not match')
+
+
+
 
 def add_or(M, kt, df, nonCart = None, params = None):
     '''Forward model for off-resonance simulation
@@ -143,6 +238,7 @@ def orc(M, kt, df):
 
 def CPR(dataIn, dataInType, kt, df, nonCart=None, params=None):
     '''Off-resonance Correction by Conjugate Phase Reconstruction
+    Maeda, A., Sano, K. and Yokoyama, T. (1988), Reconstruction by weighted correlation for MRI with time-varying gradients. IEEE Transactions on Medical Imaging, 7(1): 26-31. doi: 10.1109/42.3926
 
     Parameters
     ----------
@@ -151,7 +247,7 @@ def CPR(dataIn, dataInType, kt, df, nonCart=None, params=None):
     dataInType : str
         Can be either 'raw' or 'im'
     kt : numpy.ndarray
-        k-space trajectory
+        k-space trajectory.
     df : numpy.ndarray
         Field map
     nonCart : int
@@ -166,26 +262,22 @@ def CPR(dataIn, dataInType, kt, df, nonCart=None, params=None):
     '''
 
     if nonCart is not None:
+        check_inputs_noncartesian(dataIn.shape, dataInType, kt.shape, df.shape, params)
         cartesian_opt = 0
         NufftObj = nufft_init(kt, params)
         T = np.tile(params['t_vector'], (1, kt.shape[1]))
         N = params['N']
     else:
+        check_inputs_cartesian(dataIn.shape, dataInType, kt.shape, df.shape)
         cartesian_opt = 1
         NufftObj = None
         T = kt
         N = dataIn.shape[0]
 
     if dataInType == 'im':
-        if dataIn.shape[0] != dataIn.shape[1]:
-            raise ValueError('Data dimensions do not agree with expected image dimensions')
         rawData = im2ksp(dataIn, cartesian_opt, NufftObj, params)
     elif dataInType == 'raw':
-        if dataIn.shape[0] != kt.shape[0] or dataIn.shape[1] != kt.shape[1]:
-            raise ValueError('Data dimensions do not agree with expected dimensions (same as ktraj)')
         rawData = dataIn
-    else:
-        raise ValueError('The type of input data should be either raw or im')
 
     df_values = np.unique(df)
     M_CPR = np.zeros((N, N, len(df_values)), dtype=complex)
@@ -206,6 +298,7 @@ def CPR(dataIn, dataInType, kt, df, nonCart=None, params=None):
 
 def fs_CPR(dataIn, dataInType, kt, df, Lx, nonCart= None, params= None):
     '''Off-resonance Correction by frequency-segmented Conjugate Phase Reconstruction
+    Noll, D. C., Pauly, J. M., Meyer, C. H., Nishimura, D. G. and Macovskj, A. (1992), Deblurring for non‐2D fourier transform magnetic resonance imaging. Magn. Reson. Med., 25: 319-333. doi:10.1002/mrm.1910250210
 
     Parameters
     ----------
@@ -230,28 +323,36 @@ def fs_CPR(dataIn, dataInType, kt, df, Lx, nonCart= None, params= None):
         Corrected image data.
     '''
     if nonCart is not None:
+        check_inputs_noncartesian(dataIn.shape, dataInType, kt.shape, df.shape, params)
+
         cartesian_opt = 0
         NufftObj = nufft_init(kt, params)
         T = np.tile(params['t_vector'], (1, kt.shape[1]))
+
         N = params['N']
         t_ro = T[-1, 0] - T[0, 0]  # T[end] - TE
     else:
+        check_inputs_cartesian(dataIn.shape, dataInType, kt.shape, df.shape)
         cartesian_opt = 1
         NufftObj = None
-        T = kt
-        t_ro = T[0, -1] - T[0, 0]
         N = dataIn.shape[0]
+        #EPI case
+        #TODO: Fix this
+        if len(np.unique(kt[:, 0])) > 1:
+
+            T = kt
+            t_ro = np.max(T[:,-1]) - np.min(T[:,0])
+            t_vector = np.linspace(T[0, 0], T[0, 0] + t_ro, N ** 2)
+        # Standard Cartesian
+        else:
+            t_vector = kt[0].reshape(kt.shape[1], 1)
+            T = kt
+            t_ro = T[0, -1] - T[0, 0]
 
     if dataInType == 'im':
-        if dataIn.shape[0] != dataIn.shape[1]:
-            raise ValueError('Data dimensions do not agree with expected image dimensions')
         rawData = im2ksp(dataIn, cartesian_opt, NufftObj, params)
     elif dataInType == 'raw':
-        if dataIn.shape[0] != kt.shape[0] or  dataIn.shape[1] != kt.shape[1]:
-            raise ValueError('Data dimensions do not agree with expected dimensions (same as ktraj)')
         rawData = dataIn
-    else:
-        raise ValueError('The type of input data should be either raw or im')
 
     # Number of frequency segments
     df_max = max(np.abs([df.max(), df.min()])) # Hz
@@ -293,6 +394,7 @@ def fs_CPR(dataIn, dataInType, kt, df, Lx, nonCart= None, params= None):
 
 def MFI(dataIn, dataInType, kt , df, Lx , nonCart= None, params= None):
     '''Off-resonance Correction by Multi-Frequency Interpolation
+    Man, L., Pauly, J. M. and Macovski, A. (1997), Multifrequency interpolation for fast off‐resonance correction. Magn. Reson. Med., 37: 785-792. doi:10.1002/mrm.1910370523
 
     Parameters
     ----------
@@ -310,13 +412,14 @@ def MFI(dataIn, dataInType, kt , df, Lx , nonCart= None, params= None):
         Non-cartesian trajectory option. Default is None (Cartesian).
     params : dict
         Sequence parameters. Default is None.
-
     Returns
     -------
     M_hat : numpy.ndarray
         Corrected image data.
     '''
+
     if nonCart is not None:
+        check_inputs_noncartesian(dataIn.shape, dataInType, kt.shape, df.shape, params)
         cartesian_opt = 0
         NufftObj = nufft_init(kt, params)
         t_vector = params['t_vector']
@@ -324,23 +427,26 @@ def MFI(dataIn, dataInType, kt , df, Lx , nonCart= None, params= None):
         t_ro = T[-1,0] - T[0,0] # T[end] - TE
         N = params['N']
     else:
+        check_inputs_cartesian(dataIn.shape, dataInType, kt.shape, df.shape)
         cartesian_opt = 1
         NufftObj = None
-        t_vector = kt[0].reshape(kt.shape[1],1)
-        T = kt
-        t_ro = T[0, -1] - T[0,0]
         N = dataIn.shape[0]
+        #EPI case
+        #TODO: Fix this
+        if len(np.unique(kt[:,0])) > 1:
+            T = kt
+            t_ro = np.max(T[-1,:]) - T[0, 0]
+            t_vector = np.linspace(T[0,0], T[0,0] + t_ro, N**2)
+        # Standard Cartesian
+        else:
+            t_vector = kt[0].reshape(kt.shape[1],1)
+            T = kt
+            t_ro = T[0, -1] - T[0,0]
 
     if dataInType == 'im':
-        if dataIn.shape[0] != dataIn.shape[1]:
-            raise ValueError('Data dimensions do not agree with expected image dimensions')
         rawData = im2ksp(dataIn, cartesian_opt, NufftObj, params)
     elif dataInType == 'raw':
-        if dataIn.shape[0] != kt.shape[0] or dataIn.shape[1] != kt.shape[1]:
-            raise ValueError('Data dimensions do not agree with expected dimensions (same as ktraj)')
         rawData = dataIn
-    else:
-        raise ValueError('The type of input data should be either raw or im')
 
     df = np.round(df, 1)
     idx, idy = np.where(df == -0.0)
@@ -426,7 +532,7 @@ def coeffs_MFI_lsq(kt, f_L, df_range, t_vector):
 
     T = np.linspace(0, alpha * t_limit, len(t_vector)).reshape(-1, )
 
-    A = np.zeros((kt.shape[0], f_L.shape[0]), dtype=complex)
+    A = np.zeros((len(t_vector), f_L.shape[0]), dtype=complex)
     for l in range(f_L.shape[0]):
         phi = 2 * pi * f_L[l] * T
         A[:, l] = np.exp(1j * phi)

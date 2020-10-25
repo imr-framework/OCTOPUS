@@ -8,18 +8,19 @@ import numpy as np
 import math
 import cv2
 import matplotlib.pyplot as plt
+from skimage.data import shepp_logan_phantom
+from skimage.transform import resize
 
 import OCTOPUS.ORC as ORC
-import OCTOPUS.Fieldmap.fieldmap_gen as fieldmap_gen
-from OCTOPUS.utils.plot_results import plot_correction_results
+import OCTOPUS.fieldmap.simulate as fieldmap_sim
+from OCTOPUS.utils.plotting import plot_correction_results
 from OCTOPUS.utils.metrics import create_table
 ##
 # Original image: Shep-Logan Phantom
 ##
 def numsim_spiral():
-    ph = np.load('sample_data/slph_im.npy').astype(complex) # Shep-Logan Phantom
-    ph = (ph - np.min(ph)) / (np.max(ph)-np.min(ph)) # Normalization
-    N = ph.shape[0]
+    N = 192  # ph.shape[0]
+    ph = resize(shepp_logan_phantom(), (N, N)).astype(complex)
     plt.imshow(np.abs(ph), cmap='gray')
     plt.title('Original phantom')
     plt.axis('off')
@@ -53,7 +54,7 @@ def numsim_spiral():
     or_corrected_MFI = np.zeros((N, N, len(fmax_v)), dtype='complex')
     for fmax  in fmax_v:
 
-        field_map = fieldmap_gen.realistic(np.abs(ph), fmax)
+        field_map = fieldmap_sim.realistic(np.abs(ph), fmax)
         ### For reproducibility
         # dst = np.zeros((N, N))
         # field_map = cv2.normalize(np.load('M2.npy'), dst, -fmax, fmax, cv2.NORM_MINMAX)

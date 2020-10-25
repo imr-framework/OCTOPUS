@@ -13,10 +13,10 @@ import math
 import time
 import os
 
-from OCTOPUS.utils.get_data_from_file import get_data_from_file
-from OCTOPUS.Recon.rawdata_recon import fmap_recon
-from OCTOPUS.Recon.rawdata_recon import spiral_recon
-from OCTOPUS.utils.plot_results import plot_correction_results
+from OCTOPUS.utils.dataio import get_data_from_file
+from OCTOPUS.recon.rawdata_recon import fmap_recon
+from OCTOPUS.recon.rawdata_recon import spiral_recon
+from OCTOPUS.utils.plotting import plot_correction_results
 
 import OCTOPUS.ORC as ORC
 
@@ -134,13 +134,13 @@ print('\nCPR correction took ' + str(CPR_timing) + ' seconds.')
 print('\nFs-CPR correction took ' + str(fsCPR_timing) + ' seconds.')
 print('\nMFI correction took ' + str(MFI_timing) + ' seconds.')
 
-sos_CPR = np.sum(np.abs(CPR_result), -1)
+sos_CPR = np.sqrt(np.sum(np.abs(CPR_result)**2, -1))
 sos_CPR = np.divide(sos_CPR, np.max(sos_CPR))
 
-sos_fsCPR = np.sum(np.abs(fsCPR_result), -1)
+sos_fsCPR = np.sqrt(np.sum(np.abs(fsCPR_result)**2, -1))
 sos_fsCPR = np.divide(sos_fsCPR, np.max(sos_fsCPR))
 
-sos_MFI = np.sum(np.abs(MFI_result), -1)
+sos_MFI = np.sqrt(np.sum(np.abs(MFI_result)**2, -1))
 sos_MFI = np.divide(sos_MFI, np.max(sos_MFI))
 
 im_stack = np.stack((np.squeeze(np.rot90(original_im,-1)), np.squeeze(np.rot90(sos_CPR,-1)), np.squeeze(np.rot90(sos_fsCPR,-1)), np.squeeze(np.rot90(sos_MFI,-1))))

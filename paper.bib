@@ -113,7 +113,6 @@ title = {{Multifrequency interpolation for fast off-resonance correction}},
 volume = {37},
 year = {1997}
 }
-
 @article{Lustig2010,
 abstract = {A new approach to autocalibrating, coil-by-coil parallel imaging reconstruction, is presented. It is a generalized reconstruction framework based on self-consistency. The reconstruction problem is formulated as an optimization that yields the most consistent solution with the calibration and acquisition data. The approach is general and can accurately reconstruct images from arbitrary k-space sampling patterns. The formulation can flexibly incorporate additional image priors such as off-resonance correction and regularization terms that appear in compressed sensing. Several iterative strategies to solve the posed reconstruction problem in both image and k-space domain are presented. These are based on a projection over convex sets and conjugate gradient algorithms. Phantom and in vivo studies demonstrate efficient reconstructions from undersampled Cartesian and spiral trajectories. Reconstructions that include off-resonance correction and nonlinear ℓ1-wavelet regularization are also demonstrated. {\textcopyright} 2010 Wiley-Liss, Inc.},
 author = {Lustig, Michael and Pauly, John M.},
@@ -126,6 +125,7 @@ number = {2},
 pages = {457--471},
 pmid = {20665790},
 title = {{SPIRiT: Iterative self-consistent parallel imaging reconstruction from arbitrary k-space}},
+url = {https://people.eecs.berkeley.edu/{~}mlustig/Software.html},
 volume = {64},
 year = {2010}
 }
@@ -140,9 +140,11 @@ keywords = {Magnetic resonance fingerprinting,Off-resonance,Relaxometry,Spiral t
 mendeley-groups = {OCTOPUS-JOSS},
 pages = {63--72},
 title = {{Multi-frequency interpolation in spiral magnetic resonance fingerprinting for correction of off-resonance blurring}},
+url = {https://github.com/jostenson/MRI{\_}Ostenson{\_}MRF{\_}MFI},
 volume = {41},
 year = {2017}
 }
+
 
 @article{Jenkinson2012,
 abstract = {FSL (the FMRIB Software Library) is a comprehensive library of analysis tools for functional, structural and diffusion MRI brain imaging data, written mainly by members of the Analysis Group, FMRIB, Oxford. For this NeuroImage special issue on“20years offMRI”we have beenaskedtowrite about the history, developments and current status of FSL.We also include some descriptions of parts of FSL that are not well covered in the existing literature.We hope that some of this contentmight be of interest to users of FSL, and alsomaybe to newresearch groups considering creating, releasing and supporting newsoftware packages for brain image analysis.},
@@ -153,9 +155,11 @@ mendeley-groups = {OCTOPUS-JOSS},
 number = {2},
 pages = {782--790},
 title = {{Review FSL}},
+url = {https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FUGUE},
 volume = {62},
 year = {2012}
 }
+
 
 @article{Sutton2003,
 abstract = {In magnetic resonance imaging, magnetic field inhomogeneities cause distortions in images that are reconstructed by conventional last Fourier transform (FFT) methods. Several noniterative image reconstruction methods are used currently to compensate for field inhomogeneities, but these methods assume that the field map that characterizes the off-resonance frequencies is spatially smooth. Recently, iterative methods have been proposed that can circumvent this assumption and provide improved compensation for off-resonance effects. However, straightforward implementations of such iterative methods suffer from inconveniently long computation times. This paper describes a tool for accelerating iterative reconstruction of field-corrected MR images: a novel time-segmented approximation to the MR signal equation. We use a min-max formulation to derive the temporal interpolator. Speedups of around 60 were achieved by combining this temporal interpolator with a nonuniform fast Fourier transform with normalized root mean squared approximation errors of 0.07{\%}. The proposed method provides fast, accurate, field-corrected image reconstruction even when the field map is not smooth.},
@@ -169,9 +173,11 @@ number = {2},
 pages = {178--188},
 pmid = {12715994},
 title = {{Fast, iterative image reconstruction for MRI in the presence of field inhomogeneities}},
+url = {https://web.eecs.umich.edu/{~}fessler/code/},
 volume = {22},
 year = {2003}
 }
+
 
 @article{Fessler2005,
 abstract = {In some types of magnetic resonance (MR) imaging, particularly functional brain scans, the conventional Fourier model for the measurements is inaccurate. Magnetic field inhomogeneities, which are caused by imperfect main fields and by magnetic susceptibility variations, induce distortions in images that are reconstructed by conventional Fourier methods. These artifacts hamper the use of functional MR imaging (fMRI) in brain regions near air/tissue interfaces. Recently, iterative methods that combine the conjugate gradient (CG) algorithm with nonuniform FFT (NUFFT) operations have been shown to provide considerably improved image quality relative to the conjugate-phase method. However, for non-Cartesian k-space trajectories, each CG-NUFFT iteration requires numerous k-space interpolations; these are operations that are computationally expensive and poorly suited to fast hardware implementations. This paper proposes a faster iterative approach to field-corrected MR image reconstruction based on the CG algorithm and certain Toeplitz matrices. This CG-Toeplitz approach requires k-space interpolations only for the initial iteration; thereafter, only fast Fourier transforms (FFTs) are required. Simulation results show that the proposed CG-Toeplitz approach produces equivalent image quality as th CG-NUFFT method with significantly reduced computation time. {\textcopyright} 2005 IEEE.},
@@ -184,15 +190,17 @@ mendeley-groups = {OCTOPUS-JOSS},
 number = {9},
 pages = {3393 -- 3402},
 title = {{Toeplitz-based iterative image reconstruction for MRI with correction for magnetic field inhomogeneity}},
+url = {https://web.eecs.umich.edu/{~}fessler/code/},
 volume = {53},
 year = {2005}
 }
+
 
 @phdthesis{Nylund2014,
 author = {Nylund, Andreas},
 mendeley-groups = {OCTOPUS-JOSS},
 pages = {43},
-school = {KTH},
+school = {KTH Royal Institute of Technology},
 title = {{Off-resonance correction for magnetic resonance imaging with spiral trajectories}},
 year = {2014}
 }
@@ -211,3 +219,236 @@ title = {{Pulseq-Graphical Programming Interface: Open source visual environment
 volume = {52},
 year = {2018}
 }
+
+@article{2020NumPy,
+author  = {Harris, Charles R. and Millman, K. Jarrod and
+        van der Walt, Stéfan J and Gommers, Ralf and
+        Virtanen, Pauli and Cournapeau, David and
+        Wieser, Eric and Taylor, Julian and Berg, Sebastian and
+        Smith, Nathaniel J. and Kern, Robert and Picus, Matti and
+        Hoyer, Stephan and van Kerkwijk, Marten H. and
+        Brett, Matthew and Haldane, Allan and
+        Fernández del Río, Jaime and Wiebe, Mark and
+        Peterson, Pearu and Gérard-Marchant, Pierre and
+        Sheppard, Kevin and Reddy, Tyler and Weckesser, Warren and
+        Abbasi, Hameer and Gohlke, Christoph and
+        Oliphant, Travis E.},
+title   = {Array programming with {NumPy}},
+journal = {Nature},
+year    = {2020},
+volume  = {585},
+pages   = {357–362},
+doi     = {10.1038/s41586-020-2649-2}
+}
+
+@article{2020SciPy,
+  author  = {Virtanen, Pauli and Gommers, Ralf and Oliphant, Travis E. and
+            Haberland, Matt and Reddy, Tyler and Cournapeau, David and
+            Burovski, Evgeni and Peterson, Pearu and Weckesser, Warren and
+            Bright, Jonathan and {van der Walt}, St{\'e}fan J. and
+            Brett, Matthew and Wilson, Joshua and Millman, K. Jarrod and
+            Mayorov, Nikolay and Nelson, Andrew R. J. and Jones, Eric and
+            Kern, Robert and Larson, Eric and Carey, C J and
+            Polat, {\.I}lhan and Feng, Yu and Moore, Eric W. and
+            {VanderPlas}, Jake and Laxalde, Denis and Perktold, Josef and
+            Cimrman, Robert and Henriksen, Ian and Quintero, E. A. and
+            Harris, Charles R. and Archibald, Anne M. and
+            Ribeiro, Ant{\^o}nio H. and Pedregosa, Fabian and
+            {van Mulbregt}, Paul and {SciPy 1.0 Contributors}},
+  title   = {{{SciPy} 1.0: Fundamental Algorithms for Scientific
+            Computing in Python}},
+  journal = {Nature Methods},
+  year    = {2020},
+  volume  = {17},
+  pages   = {261--272},
+  adsurl  = {https://rdcu.be/b08Wh},
+  doi     = {10.1038/s41592-019-0686-2},
+}
+
+@software{Nibabel,
+  author       = {Brett, Matthew and
+                  Markiewicz, Christopher J. and
+                  Hanke, Michael and
+                  Côté, Marc-Alexandre and
+                  Cipollini, Ben and
+                  McCarthy, Paul and
+                  Cheng, Christopher P. and
+                  Halchenko, Yaroslav O. and
+                  Cottaar, Michiel and
+                  Ghosh, Satrajit and
+                  Larson, Eric and
+                  Wassermann, Demian and
+                  Gerhard, Stephan and
+                  Lee, Gregory R. and
+                  Wang, Hao-Ting and
+                  Kastman, Erik and
+                  Rokem, Ariel and
+                  Madison, Cindee and
+                  Morency, Félix C. and
+                  Moloney, Brendan and
+                  Goncalves, Mathias and
+                  Riddell, Cameron and
+                  Burns, Christopher and
+                  Millman, Jarrod and
+                  Gramfort, Alexandre and
+                  Leppäkangas, Jaakko and
+                  Markello, Ross and
+                  van den Bosch, Jasper J.F. and
+                  Vincent, Robert D. and
+                  Braun, Henry and
+                  Subramaniam, Krish and
+                  Jarecka, Dorota and
+                  Gorgolewski, Krzysztof J. and
+                  Raamana, Pradeep Reddy and
+                  Nichols, B. Nolan and
+                  Baker, Eric M. and
+                  Hayashi, Soichi and
+                  Pinsard, Basile and
+                  Haselgrove, Christian and
+                  Hymers, Mark and
+                  Esteban, Oscar and
+                  Koudoro, Serge and
+                  Oosterhof, Nikolaas N. and
+                  Amirbekian, Bago and
+                  Nimmo-Smith, Ian and
+                  Nguyen, Ly and
+                  Reddigari, Samir and
+                  St-Jean, Samuel and
+                  Panfilov, Egor and
+                  Garyfallidis, Eleftherios and
+                  Varoquaux, Gael and
+                  Kaczmarzyk, Jakub and
+                  Legarreta, Jon Haitz and
+                  Hahn, Kevin S. and
+                  Hinds, Oliver P. and
+                  Fauber, Bennet and
+                  Poline, Jean-Baptiste and
+                  Stutters, Jon and
+                  Jordan, Kesshi and
+                  Cieslak, Matthew and
+                  Moreno, Miguel Estevan and
+                  Haenel, Valentin and
+                  Schwartz, Yannick and
+                  Darwin, Benjamin C and
+                  Thirion, Bertrand and
+                  Papadopoulos Orfanos, Dimitri and
+                  Pérez-García, Fernando and
+                  Solovey, Igor and
+                  Gonzalez, Ivan and
+                  Palasubramaniam, Jath and
+                  Lecher, Justin and
+                  Leinweber, Katrin and
+                  Raktivan, Konstantinos and
+                  Fischer, Peter and
+                  Gervais, Philippe and
+                  Gadde, Syam and
+                  Ballinger, Thomas and
+                  Roos, Thomas and
+                  Reddam, Venkateswara Reddy and
+                  Baratz, Zvi and
+                  freec84},
+  title        = {nipy/nibabel: 3.0.2},
+  month        = mar,
+  year         = 2020,
+  publisher    = {Zenodo},
+  version      = {3.0.2},
+  doi          = {10.5281/zenodo.3701467},
+  url          = {https://doi.org/10.5281/zenodo.3701467}
+}
+
+@Article{Matplotlib,
+  Author    = {Hunter, J. D.},
+  Title     = {Matplotlib: A 2D graphics environment},
+  Journal   = {Computing in Science \& Engineering},
+  Volume    = {9},
+  Number    = {3},
+  Pages     = {90--95},
+  abstract  = {Matplotlib is a 2D graphics package used for Python for
+  application development, interactive scripting, and publication-quality
+  image generation across user interfaces and operating systems.},
+  publisher = {IEEE COMPUTER SOC},
+  doi       = {10.1109/MCSE.2007.55},
+  year      = 2007
+}
+
+@misc{itseez2015opencv,
+  title={Open Source Computer Vision Library},
+  author={Itseez},
+  year={2015},
+  howpublished = {\url{https://github.com/itseez/opencv}}
+}
+
+@software{darcy_mason_2020_3891702,
+  author       = {Darcy Mason and
+                  scaramallion and
+                  rhaxton and
+                  mrbean-bremen and
+                  Jonathan Suever and
+                  Vanessasaurus and
+                  Guillaume Lemaitre and
+                  Dimitri Papadopoulos Orfanos and
+                  Aditya Panchal and
+                  Alex Rothberg and
+                  Joan Massich and
+                  James Kerns and
+                  Korijn van Golen and
+                  Thomas Robitaille and
+                  moloney and
+                  Matthew Shun-Shin and
+                  pawelzajdel and
+                  Markus Mattes and
+                  Blair Conrad and
+                  Félix C. Morency and
+                  Markus D. Herrmann and
+                  Hans Meine and
+                  Kevin S. Hahn and
+                  Masahiro Wada and
+                  colonelfazackerley and
+                  ferdymercury and
+                  huicpc0207 and
+                  Adam Klimont and
+                  Andrey Fedorov and
+                  Callan Bryant},
+  title        = {pydicom/pydicom: pydicom 2.0.0},
+  month        = may,
+  year         = 2020,
+  publisher    = {Zenodo},
+  version      = {v2.0.0},
+  doi          = {10.5281/zenodo.3891702},
+  url          = {https://doi.org/10.5281/zenodo.3891702}
+}
+@Misc{pynufft,
+author = {Jyh-Miin Lin},
+title = {{Pynufft}: {Python} non-uniform fast {F}ourier transform},
+year = {2013–},
+url = {https://github.com/jyhmiinlin/pynufft},
+note = {Online; https://github.com/jyhmiinlin/pynufft; Dec 2016}
+}
+
+
+@article{scikit-image,
+author = {van der Walt, St{\'{e}}fan and Sch{\"{o}}nberger, Johannes L and Nunez-Iglesias, Juan and Boulogne, Fran{\c{c}}ois and Warner, Joshua D and Yager, Neil and Gouillart, Emmanuelle and Yu, Tony and The scikit-image contributors},
+doi = {10.7717/peerj.453},
+issn = {2167-8359},
+journal = {PeerJ},
+keywords = { Education, Open source, Python, Reproducible research, Scientific programming, Visualization,Image processing},
+mendeley-groups = {OCTOPUS-JOSS},
+pages = {e453},
+title = {{scikit-image: image processing in {\{}P{\}}ython}},
+url = {https://doi.org/10.7717/peerj.453},
+volume = {2},
+year = {2014}
+}
+
+@book{Gonzalez2001,
+author = {Gonzalez, Rafael C. and Woods, Richard E.},
+title = {Digital Image Processing},
+year = {2001},
+isbn = {0201180758},
+publisher = {Addison-Wesley Longman Publishing Co., Inc.},
+address = {USA},
+edition = {2nd},
+abstract = {From the Publisher: Digital Image Processing has been the leading textbook in its field for more than 20 years. As was the case with the 1977 and 1987 editions by Gonzalez and Wintz, and the 1992 edition by Gonzalez and Woods, the present edition was prepared with students and instructors in mind. The material is timely, highly readable, and illustrated with numerous examples of practical significance. All mainstream areas of image processing are covered, including a totally revised introduction and discussion of image fundamentals, image enhancement in the spatial and frequency domains, restoration, color image processing, wavelets, image compression, morphology, segmentation, and image description. Coverage concludes with a discussion of the fundamentals of object recognition. Although the book is completely self-contained, a Companion Web Site (see inside front cover) provides additional support in the form of review material, answers to selected problems, laboratory project suggestions, and a score of other features. A supplementary instructor's manual is available to instructors who have adopted the book for classroom use. New Features New chapters on wavelets, image morphology, and color image processing. More than 500 new images and over 200 new line drawings and tables. A revision and update of all chapters, including topics such as segmentation by watersheds. Numerous new examples with processed images of higher resolution. A reorganization that allows the reader to get to the material on actual image processing much sooner than before. Updated image compression standards and a new section on compressionusing wavelets. A more intuitive development of traditional topics such as image transforms and image restoration. Updated bibliography.}
+}
+
+
