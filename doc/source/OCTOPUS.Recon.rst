@@ -1,28 +1,18 @@
-OCTOPUS.Recon subpackage
+OCTOPUS.recon subpackage
 ========================
 
-OCTOPUS.Recon.imtransforms module
+OCTOPUS.recon.imtransforms module
 ---------------------------------
 
-.. automodule:: OCTOPUS.Recon.imtransforms
+.. automodule:: OCTOPUS.recon.imtransforms
    :members:
    :undoc-members:
    :show-inheritance:
 
-OCTOPUS.Recon.rawdata\_recon module
+OCTOPUS.recon.rawdata\_recon module
 -----------------------------------
 
-.. automodule:: OCTOPUS.Recon.rawdata_recon
+.. automodule:: OCTOPUS.recon.rawdata_recon
    :members:
    :undoc-members:
    :show-inheritance:
-
-OCTOPUS.Recon.read\_dicom module
---------------------------------
-
-.. automodule:: OCTOPUS.Recon.read_dicom
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-

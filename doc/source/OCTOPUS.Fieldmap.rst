@@ -1,18 +1,18 @@
-OCTOPUS.Fieldmap subpackage
+OCTOPUS.fieldmap subpackage
 ===========================
 
-OCTOPUS.Fieldmap.fieldmap\_gen module
--------------------------------------
+OCTOPUS.fieldmap.simulate module
+--------------------------------
 
-.. automodule:: OCTOPUS.Fieldmap.fieldmap_gen
+.. automodule:: OCTOPUS.fieldmap.simulate
    :members:
    :undoc-members:
    :show-inheritance:
 
-OCTOPUS.Fieldmap.prepare\_fieldmap\_unwrap module
--------------------------------------------------
+OCTOPUS.fieldmap.unwrap module
+------------------------------
 
-.. automodule:: OCTOPUS.Fieldmap.prepare_fieldmap_unwrap
+.. automodule:: OCTOPUS.fieldmap.unwrap
    :members:
    :undoc-members:
    :show-inheritance:

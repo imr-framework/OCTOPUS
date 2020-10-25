@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 
 from pydicom import dcmread
 
-from OCTOPUS.utils.dataio import get_data_from_file
+from OCTOPUS.utils.dataio import get_data_from_file, read_dicom
 from OCTOPUS.recon.rawdata_recon import mask_by_threshold
 
 def fsl_prep(data_path_raw, data_path_dicom, dst_folder, dTE):
@@ -52,10 +52,10 @@ def fsl_prep(data_path_raw, data_path_dicom, dst_folder, dTE):
     else:
 
         Nslices = b0_map.shape[-3]
-        sl_order = np.zeros((Nslices))
+        '''sl_order = np.zeros((Nslices))
         sl_order[range(0,Nslices,2)] = range(int(Nslices/2), Nslices)
         sl_order[range(1,Nslices,2)] = range(0, int(Nslices/2))
-        sl_order = sl_order.astype(int)
+        sl_order = sl_order.astype(int)'''
 
     ##
     # FT to get the echo complex images
@@ -88,25 +88,20 @@ def fsl_prep(data_path_raw, data_path_dicom, dst_folder, dTE):
 
 
     brain_mask = mask_by_threshold(mag_im)
-    brain_extracted = np.rot90(np.squeeze(mag_im) * brain_mask)
+    brain_extracted = np.squeeze(mag_im) * brain_mask
+
+    plt.imshow(brain_extracted[:,:,1])
+    plt.show()
 
     img = nib.Nifti1Image(brain_extracted, np.eye(4))
     nib.save(img, os.path.join(dst_folder, 'mag_vol_extracted.nii.gz'))
 
     # Phase difference image from DICOM data
-    #TODO: have to fix this logic
-    if os.path.isdir(data_path_dicom):
-        # multi-slice
-        files_in_folder = os.listdir(data_path_dicom)
-        vol = np.zeros((N, N, Nslices))
-        for file, idx in zip(files_in_folder, range(Nslices)):
-            vol[:,:,idx] = dcmread(os.path.join(data_path_dicom,file)).pixel_array
-    elif data_path_dicom[-4:] == '.dcm' or data_path_dicom[-4:] == '.IMA':
-        data = dcmread(data_path_dicom)
-        # Get the image data
-        vol = data.pixel_array
+
+    if os.path.isdir(data_path_dicom) or data_path_dicom[-4:] == '.dcm' or data_path_dicom[-4:] == '.IMA':
+        vol = read_dicom(data_path_dicom)
     else:
-        vol = get_data_from_file(data_path_dicom)
+        vol = np.rot90(get_data_from_file(data_path_dicom),-1)
     # Save as niftii
 
     img = nib.Nifti1Image(vol, np.eye(4))

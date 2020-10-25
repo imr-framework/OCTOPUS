@@ -2,6 +2,6 @@ OCTOPUS
 =======
 
 .. toctree::
-   :maxdepth: 7
+   :maxdepth: 4
 
    OCTOPUS

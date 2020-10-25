@@ -2,27 +2,7 @@
 '''
 Methods for ORC (Off-Resonance Correction) and off-resonance simulation
 \nAuthor: Marina Manso Jimeno
-\nLast updated: 10/07/2020
-
-\n Some comments on data input and output:
-\n At the current stage, the methods apply a 2D reconstruction only. Therefore, data input and output will be two-dimensional.
-\n For **image data**:
-    Input: 2D image [N, N]
-    Output: 2D image [N, N]
-\n For **raw data**:
-\n  Cartesian
-\n      Input: 2D array [Lines, Columns]
-\n      Output: 2D image [N, N]
-\n  Non-Cartesian
-\n      Input: 2D array [Npoints, Nshots]
-\n      Output: 2D image [N, N]
-\n Note that when the input data corresponds to a **non-cartesian** trajectory, extra details are needed. Those should be grouped into a dictionary and should include:
-\n    Npoints :  Number of points per shot
-\n    Nshots : Number of shots
-\n    N : matrix size of the output image
-\n    t_ro : read-out time of one shot in seconds
-\n    T : Time map of each point (with respect to the RF pulse) in seconds
-
+\nLast updated: 10/25/2020
 '''
 
 import numpy.fft as npfft
@@ -435,7 +415,7 @@ def MFI(dataIn, dataInType, kt , df, Lx , nonCart= None, params= None):
         #TODO: Fix this
         if len(np.unique(kt[:,0])) > 1:
             T = kt
-            t_ro = np.max(T[-1,:]) - T[0, 0]
+            t_ro = np.max(T[:,-1]) - np.min(T[:,0])
             t_vector = np.linspace(T[0,0], T[0,0] + t_ro, N**2)
         # Standard Cartesian
         else:

@@ -3,9 +3,11 @@ import sys
 import os
 import numpy as np
 from tqdm import tqdm
+from pathlib import Path
 import math
 
-sys.path.insert(0,r'C:\Users\marin\Documents\GitHubRepositories\OCTOPUS')
+path_search = str(Path(__file__).parent.parent)
+sys.path.insert(0, path_search)
 
 from OCTOPUS.utils.dataio import get_data_from_file
 import OCTOPUS.ORC as ORC
@@ -23,10 +25,7 @@ parser.add_argument('--grad_raster', default=10e-6, dest='grad_raster', help="Gr
 parser.add_argument('--TE', default=0, dest='TE', help="Echo time")
 parser.add_argument('--dcf', default=None, dest='dcf', help="Density compensation factor for non-cartesian trajectories")
 
-#li = [r'C:\Users\marin\Documents\PhD\B0inhomogeneity\Data\20200917\shimmed', 'rawdata_spiral.mat', 'ktraj.npy', 'fieldmap_unwrapped.nii.gz', 'MFI']
 
-
-#args = parser.parse_args(li)
 args = parser.parse_args()
 
 data_in = get_data_from_file(os.path.join(args.path, args.datain))

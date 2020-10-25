@@ -16,9 +16,8 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   OCTOPUS.Fieldmap
-   OCTOPUS.Recon
+   OCTOPUS.fieldmap
+   OCTOPUS.recon
    OCTOPUS.utils
-
 
 

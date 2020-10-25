@@ -26,6 +26,8 @@ def get_data_from_file(input):
         file_name = input
     elif isinstance(input, dict):
         file_name = next(iter(input))
+    else: #pathlib
+        file_name = input.stem + input.suffix
     file_format = file_name[file_name.find('.'):]
     if file_format == '.mat':
         file_data_dict = sio.loadmat(file_name)

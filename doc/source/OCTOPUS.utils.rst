@@ -1,6 +1,14 @@
 OCTOPUS.utils subpackage
 ========================
 
+OCTOPUS.utils.dataio module
+---------------------------
+
+.. automodule:: OCTOPUS.utils.dataio
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 OCTOPUS.utils.metrics module
 ----------------------------
 
@@ -9,19 +17,11 @@ OCTOPUS.utils.metrics module
    :undoc-members:
    :show-inheritance:
 
-OCTOPUS.utils.plot\_results module
-----------------------------------
+OCTOPUS.utils.plotting module
+-----------------------------
 
-.. automodule:: OCTOPUS.utils.plot_results
+.. automodule:: OCTOPUS.utils.plotting
    :members:
    :undoc-members:
    :show-inheritance:
-
-OCTOPUS.utils.get\_data\_from\_file module
-------------------------------------------
-
-.. automodule:: OCTOPUS.utils.get_data_from_file
-   :members:
-   :undoc-members:
-   :show-inheritance:  
 
