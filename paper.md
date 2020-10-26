@@ -7,17 +7,19 @@ tags:
 authors:
   - name: Marina Manso Jimeno
     orcid: 0000-0002-1141-2049
-    affiliation: 1
+    affiliation: 1,2
   - name: John Thomas Vaughan Jr.
     orcid: 0000-0002-6933-3757
-    affiliation: 1
+    affiliation: 1,2
   - name: Sairam Geethanath
     orcid: 0000-0002-3776-4114
-    affiliation: 1
+    affiliation: 2
 
 affiliations:
- - name: Columbia Magnetic Resonance Research Center, Columbia University in the City of New York, USA
+ - name: Department of Biomedical Engineering, Columbia University in the City of New York, USA
    index: 1
+ - name: Columbia Magnetic Resonance Research Center, Columbia University in the City of New York, USA
+   index: 2
 date: 15 OCTOBER 2020
 bibliography: paper.bib
 ---
@@ -26,8 +28,8 @@ bibliography: paper.bib
 
 `OCTOPUS` is a Python-based software for correction of off-resonance
 artifacts in Magnetic Resonance (MR) images. It implements three different
-methods for correction of both Cartesian and non-Cartesian data. These methods are Conjugate Phase Reconstruction (CPR), 
-frequency-segmented CPR and Multi-Frequency Interpolation(MFI).`OCTOPUS` is easy to integrate into other two-dimensional reconstruction pipelines, which makes the tool highly flexible 
+methods for correction of both Cartesian and non-Cartesian data: Conjugate Phase Reconstruction (CPR), 
+frequency-segmented CPR and Multi-Frequency Interpolation(MFI). `OCTOPUS` is easy to integrate into other two-dimensional reconstruction pipelines, which makes the tool highly flexible 
 and customizable.
 
 # Statement of need
@@ -38,7 +40,7 @@ read-out direction, which can turn into blurring, geometrical distortion
 and degradation in the reconstructed image [@LukPat2001]. Images
 acquired using long readout trajectories and/or at high fields where the
 field homogeneity is lower, are more prone to this problem. However,
-such an acquisition scenario also delivers desirable properties, such as
+such acquisition scenarios also deliver desirable properties, such as
 short scanning times, gradient efficiency, motion tolerance and better
 signal-to-noise ratio [@Chen2008].
 
@@ -63,13 +65,13 @@ MFI implementation for Magnetic Resonance Fingerprinting (MRF)
 correction part of the FSL library [@Jenkinson2012]; and the MIRT
 toolbox, a MATLAB-based MRI reconstruction package that offers field
 inhomogeneity correction using iterative reconstruction
-methods[@Sutton2003; @Fessler2005]. Nylund's thesis [@Nylund2014] also
+methods [@Sutton2003; @Fessler2005]. Nylund's thesis [@Nylund2014] also
 contains source MATLAB code for fs-CPR and MFI correction of spiral
 images.
 
 All of the mentioned implementations are highly specific, defined for a
 particular k-space trajectory, application and/or include a single
-correction method. To exemplify some: SPIRiT is devoted to correct data acquired using 
+correction method. SPIRiT is devoted to correct data acquired using 
 parallel imaging methods, Ostenson's package only corrects MRF spiral data and implements 
 only one correction method and FUGUE corrects distortion solely on EPI images. These limitations typically lead researchers to
 adapt their data in an attempt to fit it into the available pipelines
@@ -82,19 +84,18 @@ available packages are also MATLAB-based, which unlike Python, requires users to
 Python open-source code for three fundamental methods (CPR, fs-CPR and
 MFI). The implementation is independent of the application and the image
 acquisition scheme, easing its integration into any reconstruction
-pipeline. `OCTOPUS` can also run in the browser through Google Colab, a free hosted jupyter notebook environment that allows to execute Python code in the browser.
+pipeline. `OCTOPUS` can also run in the browser through Google Colab, a freely hosted jupyter notebook environment that allows to execute Python code in the browser.
 Given this feature, `OCTOPUS` is the first zero-footprint off-resonance
 correction software, meaning it doesn't necessarily require software download, installation or configuration in the user's local machine.
 
 # Functionality and limitations
 `OCTOPUS` is aimed at MR researchers working with long-readout or field-inhomogeneity sensitive k-space trajectories or 
-MR acquisition methods. A short demo is provided in the next section. The presented tool
-will correct or reduce geometric distortion and/or blurring present in the images due to off-resonance effects by 
+MR acquisition methods. A short demo is provided in the next section. `OCTOPUS` corrects or reduces geometric distortion and/or blurring present in the images due to off-resonance effects by 
 leveraging other Python libraries, specifically NumPy [@2020NumPy], SciPy [@2020SciPy], scikit-image [@scikit-image], 
 NiBabel[@Nibabel], Matplotlib [@Matplotlib], OpenCV [@itseez2015opencv], Pydicom [@darcy_mason_2020_3891702], and PyNUFFT[@pynufft]. 
-The expected outputs is an image with recovered, sharper edges and undistorted shape.
+The expected output is an image with recovered, sharper edges and undistorted shape.
 
-`OCTOPUS` corrects off-resonance independently of the trajectory used to acquire the data being Cartesian or non-Cartesian. 
+Also, `OCTOPUS` corrects off-resonance independently of the trajectory used to acquire the data being Cartesian or non-Cartesian. 
 The input of the correction methods could be either image or raw data, although using raw data is more efficient
 and may avoid trajectory-dependent artifacts in the case of non-cartesian data.
 
@@ -106,7 +107,7 @@ fields. Additionally, the tool has been only tested on Cartesian and spiral data
 To illustrate the usage of the package we performed in silico numerical
 simulations using a Cartesian trajectory, a spiral trajectory and a
 simulated field map. For these experiments we used a Shepp-Logan head phantom, widely used
-to test reconstruction algorithms [@Gonzalez2001].  The procedure steps were:
+to test reconstruction algorithms [@Gonzalez2001].  The steps were:
 
 1. Forward model simulation of off-resonance effect on a 192x192
    Shepp-Logan phantom (Figure 1.A).
