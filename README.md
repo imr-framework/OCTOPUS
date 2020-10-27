@@ -28,7 +28,7 @@ After the [installation] is completed, download the [example data]. Now you can 
 
 `numsim_cartesian.py` and `numsim_spiral.py` run a forward model on a 192x192 Shepp-Logan phantom image. They simulate the off-resonance effect of a cartesian and spiral k-space trajectory, respectively, given a simulated field map.
 
-With `OCTOPUS.Fieldmap.fieldmap_gen` you can experiment the effect of the type of field map and its frequency range on the output corrupted image.
+With `OCTOPUS.fieldmap.simulate` you can experiment the effect of the type of field map and its frequency range on the output corrupted image.
 
 The corrupted image is then corrected using CPR, fs-CPR and MFI and the results are displayed.
 
@@ -49,6 +49,17 @@ Lx =    # L=Lmin * Lx
 ```
 6. Run the script.
 The program will display an image panel with the original image and the corrected versions.
+
+### 3. Command line implementation - **NEW!**
+Now you can easily run OCTOPUS using commands on your terminal. After installation, type:
+```python
+OCTOPUS_cli path/to/container/folder rawdata_file kspace_trajectory_file field_map_file correction_method
+```
+For more information about the command line implemetation and its required arguments, type:
+```python
+OCTOPUS_cli -h
+```
+For more information about how to structure your data, visit the [API docs][api-docs]. 
 
 ## Skip the installation! - `OCTOPUS` in your browser
 
