@@ -22,7 +22,7 @@ setuptools.setup(
     packages = setuptools.find_packages(),
     include_package_data = True,
     install_requires = install_reqs,
-    scripts = ['bin/prog'],
+    scripts = ['bin/prog.py'],
     license = 'License :: OSI Approved :: GNU Affero General Public License v3',
     classifiers = [
         "Programming Language :: Python :: 3.6",
