@@ -7,10 +7,10 @@ tags:
 authors:
   - name: Marina Manso Jimeno
     orcid: 0000-0002-1141-2049
-    affiliation: 1,2
+    affiliation: "1, 2"
   - name: John Thomas Vaughan Jr.
     orcid: 0000-0002-6933-3757
-    affiliation: 1,2
+    affiliation: "1, 2"
   - name: Sairam Geethanath
     orcid: 0000-0002-3776-4114
     affiliation: 2
