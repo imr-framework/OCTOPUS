@@ -12,23 +12,34 @@ import OCTOPUS.fieldmap.simulate as fieldmap_sim
 import OCTOPUS.ORC as ORC
 from OCTOPUS.utils.plotting import plot_correction_results
 from OCTOPUS.utils.metrics import create_table
+from OCTOPUS.recon.rawdata_recon import mask_by_threshold
 
 from skimage.data import shepp_logan_phantom
 from skimage.transform import resize
+from skimage.util import img_as_float, random_noise
+from skimage.segmentation import flood_fill
 ##
 # Original image: Shep-Logan Phantom
 ##
 
 def numsim_cartesian():
-    '''ph = np.load('sample_data/slph_im.npy').astype(complex) # Shep-Logan Phantom
-    ph = (ph - np.min(ph)) / (np.max(ph)-np.min(ph)) # Normalization'''
-    N = 192#ph.shape[0]
-    ph = resize(shepp_logan_phantom(), (N,N)).astype(complex)
+
+    N = 192
+    ph = resize(shepp_logan_phantom(), (N,N))
+
+
+    ph = ph.astype(complex)
     plt.imshow(np.abs(ph), cmap='gray')
     plt.title('Original phantom')
     plt.axis('off')
     plt.colorbar()
     plt.show()
+
+    brain_mask = mask_by_threshold(ph)
+
+    # Floodfill from point (0, 0)
+    ph_holes = ~(flood_fill(brain_mask, (0, 0), 1).astype(int)) + 2
+    mask = brain_mask + ph_holes
 
     ##
     # Cartesian k-space trajectory
@@ -46,21 +57,15 @@ def numsim_cartesian():
     fmax_v = [1600, 3200, 4800] # Hz correspontig to 25, 50 and 75 ppm at 3T
     i = 0
 
-    field_maps = np.zeros((N, N, len(fmax_v)))
+
     or_corrupted = np.zeros((N, N, len(fmax_v)), dtype='complex')
     or_corrected_CPR = np.zeros((N, N, len(fmax_v)), dtype='complex')
     or_corrected_fsCPR = np.zeros((N, N, len(fmax_v)), dtype='complex')
     or_corrected_MFI = np.zeros((N, N, len(fmax_v)), dtype='complex')
     for fmax in fmax_v:
-        field_map = fieldmap_sim.realistic(np.abs(ph), fmax)
+        field_map = fieldmap_sim.realistic(np.abs(ph), mask, fmax)
 
-        ### For reproducibility
-        # dst = np.zeros((N,N))
-        # field_map = cv2.normalize(np.load('M2.npy'), dst, -fmax, fmax, cv2.NORM_MINMAX)
-        # field_map = field_map * np.load('mask.npy')
-        ###
 
-        field_maps[:,:,i] = field_map
         plt.imshow(field_map, cmap='gray')
         plt.title('Field Map')
         plt.colorbar()
@@ -70,11 +75,14 @@ def numsim_cartesian():
     ##
     # Corrupted images
     ##
-        or_corrupted[:,:,i] = ORC.add_or_CPR(ph, ktraj_cart, field_map)
-        '''plt.imshow(np.abs(or_corrupted[:,:,i]),cmap='gray')
+        or_corrupted[:,:,i],_ = ORC.add_or_CPR(ph, ktraj_cart, field_map)
+        corrupt = (np.abs(or_corrupted[:,:,i]) - np.abs(or_corrupted[...,i]).min())/(np.abs(or_corrupted[:,:,i]).max() - np.abs(or_corrupted[...,i]).min())
+        #plt.imshow(np.abs(or_corrupted[:,:,i]),cmap='gray')
+        plt.imshow(corrupt, cmap='gray')
         plt.colorbar()
+        plt.title('Corrupted Image')
         plt.axis('off')
-        plt.show()'''
+        plt.show()
 
     ###
     # Corrected images
@@ -92,6 +100,10 @@ def numsim_cartesian():
     row_names = ('-/+ 1600 Hz', '-/+ 3200 Hz', '-/+ 4800 Hz')
     plot_correction_results(im_stack, cols, row_names)
 
+    # np.save('or_corrupted.npy', or_corrupted)
+    # np.save('or_corrected_CPR.npy', or_corrected_CPR)
+    # np.save('or_corrected_fsCPR.npy', or_corrected_fsCPR)
+    # np.save('or_corrected_MFI.npy', or_corrected_MFI)
     ##
     # Metrics
     ##

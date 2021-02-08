@@ -27,14 +27,14 @@ def get_data_from_file(input):
     elif isinstance(input, dict):
         file_name = next(iter(input))
     else: #pathlib
-        file_name = input.stem + input.suffix
+        file_name = input._str
     file_format = file_name[file_name.find('.'):]
     if file_format == '.mat':
         file_data_dict = sio.loadmat(file_name)
         file_data = file_data_dict[list(file_data_dict.keys())[-1]]
     elif file_format == '.npy':
         file_data = np.load(file_name)
-    elif file_format == '.nii.gz':
+    elif file_format == '.nii.gz' or file_format == '.nii':
         file_data = nib.load(file_name).get_fdata()
     else:
         raise ValueError('Sorry, this file format is not supported:' + (file_format))

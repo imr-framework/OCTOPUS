@@ -52,10 +52,10 @@ def fsl_prep(data_path_raw, data_path_dicom, dst_folder, dTE):
     else:
 
         Nslices = b0_map.shape[-3]
-        '''sl_order = np.zeros((Nslices))
+        sl_order = np.zeros((Nslices))
         sl_order[range(0,Nslices,2)] = range(int(Nslices/2), Nslices)
         sl_order[range(1,Nslices,2)] = range(0, int(Nslices/2))
-        sl_order = sl_order.astype(int)'''
+        sl_order = sl_order.astype(int)
 
     ##
     # FT to get the echo complex images
@@ -73,10 +73,9 @@ def fsl_prep(data_path_raw, data_path_dicom, dst_folder, dTE):
     echo1 = echo1[oversamp_factor:-oversamp_factor, :, :, :]
     echo2 = echo2[oversamp_factor:-oversamp_factor, :, :, :]
 
-    # echo1 = echo1[:,:,sl_order,:]
+    echo1 = echo1[:,:,sl_order,:]
     # Magnitude image with object 'brain' extracted
     mag_im = np.sqrt(np.sum(np.abs(echo1) ** 2, -1))
-    #mag_im = np.sum(np.abs(echo1), -1)
     mag_im = np.divide(mag_im, np.max(mag_im))
 
 
@@ -87,11 +86,13 @@ def fsl_prep(data_path_raw, data_path_dicom, dst_folder, dTE):
     plt.show()'''
 
 
+
     brain_mask = mask_by_threshold(mag_im)
     brain_extracted = np.squeeze(mag_im) * brain_mask
 
-    plt.imshow(brain_extracted[:,:,1])
-    plt.show()
+    # for i in range(Nslices):
+    #     plt.imshow(brain_extracted[:,:,i])
+    #     plt.show()
 
     img = nib.Nifti1Image(brain_extracted, np.eye(4))
     nib.save(img, os.path.join(dst_folder, 'mag_vol_extracted.nii.gz'))
@@ -100,9 +101,20 @@ def fsl_prep(data_path_raw, data_path_dicom, dst_folder, dTE):
 
     if os.path.isdir(data_path_dicom) or data_path_dicom[-4:] == '.dcm' or data_path_dicom[-4:] == '.IMA':
         vol = read_dicom(data_path_dicom)
+        vol = np.rot90(vol[...,sl_order], -1)
     else:
-        vol = np.rot90(get_data_from_file(data_path_dicom),-1)
+        vol = get_data_from_file(data_path_dicom)
     # Save as niftii
 
+    # for i in range(Nslices):
+    #     plt.imshow(vol[:,:,i])
+    #     plt.show()
+
+    for i in range(Nslices):
+        plt.subplot(1,2,1)
+        plt.imshow(brain_extracted[...,i])
+        plt.subplot(1,2,2)
+        plt.imshow(vol[:,:,i])
+        plt.show()
     img = nib.Nifti1Image(vol, np.eye(4))
     nib.save(img, os.path.join(dst_folder, 'phase_diff.nii.gz'))

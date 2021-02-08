@@ -2,7 +2,7 @@
 '''
 Methods for ORC (Off-Resonance Correction) and off-resonance simulation
 \nAuthor: Marina Manso Jimeno
-\nLast updated: 10/25/2020
+\nLast updated: 01/20/2021
 '''
 
 import numpy.fft as npfft
@@ -153,10 +153,16 @@ def add_or_CPR(M, kt, df, nonCart = None, params = None):
         Off-resonance corrupted image data
     '''
     # Create a phase matrix - 2*pi*df*t for every df and every t
-    if nonCart is not None:
+    if nonCart is not None and nonCart == 1:
         cartesian_opt = 0
         NufftObj = nufft_init(kt, params)
         T = np.tile(params['t_vector'], (1, kt.shape[1]))
+
+    elif nonCart == 'EPI':
+        cartesian_opt = 1
+        NufftObj = None
+        T = np.flipud(params['t_vector']).reshape(params['N'], params['N'])
+        T[1:params['N']:2,:] = np.fliplr(T[1:params['N']:2,:])
 
     else:
         cartesian_opt = 1
@@ -169,11 +175,11 @@ def add_or_CPR(M, kt, df, nonCart = None, params = None):
     df_values = np.unique(df)
 
     M_or_CPR = np.zeros((M.shape[0], M.shape[1], len(df_values)), dtype=complex)
-    #kspsave= np.zeros((params['Npoints'],params['Nshots'],len(df_values)),dtype=complex)
+    kspsave = np.zeros((kspace.shape[0],kspace.shape[1],len(df_values)),dtype=complex)
     for i in range(len(df_values)):
         phi = - 2 * pi* df_values[i] * T
-        kspace_or= kspace * np.exp(1j * phi)
-        #kspsave[:,:,i] = kspace_or
+        kspace_or = kspace * np.exp(1j * phi)
+        kspsave[:,:,i] = kspace_or
         M_corr = ksp2im(kspace_or, cartesian_opt, NufftObj, params)
         M_or_CPR[:, :, i] = M_corr
 
@@ -185,7 +191,7 @@ def add_or_CPR(M, kt, df, nonCart = None, params = None):
             M_or[x, y] = M_or_CPR[x, y, idx]
     '''plt.imshow(abs(M_or))
     plt.show()'''
-    return M_or#, kspsave
+    return M_or, kspsave
 
 def orc(M, kt, df):
     '''Off-resonance correction for Cartesian trajectories
@@ -241,12 +247,22 @@ def CPR(dataIn, dataInType, kt, df, nonCart=None, params=None):
         Corrected image data.
     '''
 
-    if nonCart is not None:
+    if nonCart is not None and nonCart == 1:
         check_inputs_noncartesian(dataIn.shape, dataInType, kt.shape, df.shape, params)
         cartesian_opt = 0
         NufftObj = nufft_init(kt, params)
         T = np.tile(params['t_vector'], (1, kt.shape[1]))
         N = params['N']
+
+    elif nonCart == 'EPI':
+        # check_inputs_cartesian(dataIn.shape, dataInType, kt.shape, df.shape)
+        cartesian_opt = 1
+        NufftObj = None
+        T = np.flipud(params['t_vector']).reshape(params['N'], params['N'])
+        T[1:params['N']:2,:] = np.fliplr(T[1:params['N']:2,:])
+
+        N = dataIn.shape[0]
+
     else:
         check_inputs_cartesian(dataIn.shape, dataInType, kt.shape, df.shape)
         cartesian_opt = 1
@@ -302,7 +318,7 @@ def fs_CPR(dataIn, dataInType, kt, df, Lx, nonCart= None, params= None):
     M_hat : numpy.ndarray
         Corrected image data.
     '''
-    if nonCart is not None:
+    if nonCart is not None and nonCart == 1:
         check_inputs_noncartesian(dataIn.shape, dataInType, kt.shape, df.shape, params)
 
         cartesian_opt = 0
@@ -311,23 +327,26 @@ def fs_CPR(dataIn, dataInType, kt, df, Lx, nonCart= None, params= None):
 
         N = params['N']
         t_ro = T[-1, 0] - T[0, 0]  # T[end] - TE
+
+    elif nonCart == 'EPI':
+        # check_inputs_cartesian(dataIn.shape, dataInType, kt.shape, df.shape)
+        cartesian_opt = 1
+        NufftObj = None
+        T = np.flipud(params['t_vector']).reshape(params['N'], params['N'])
+        T[1:params['N']:2,:] = np.fliplr(T[1:params['N']:2,:])
+        N = dataIn.shape[0]
+        t_ro = params['t_readout']
+
+
     else:
         check_inputs_cartesian(dataIn.shape, dataInType, kt.shape, df.shape)
         cartesian_opt = 1
         NufftObj = None
         N = dataIn.shape[0]
-        #EPI case
-        #TODO: Fix this
-        if len(np.unique(kt[:, 0])) > 1:
 
-            T = kt
-            t_ro = np.max(T[:,-1]) - np.min(T[:,0])
-            t_vector = np.linspace(T[0, 0], T[0, 0] + t_ro, N ** 2)
-        # Standard Cartesian
-        else:
-            t_vector = kt[0].reshape(kt.shape[1], 1)
-            T = kt
-            t_ro = T[0, -1] - T[0, 0]
+        t_vector = kt[0].reshape(kt.shape[1], 1)
+        T = kt
+        t_ro = T[0, -1] - T[0, 0]
 
     if dataInType == 'im':
         rawData = im2ksp(dataIn, cartesian_opt, NufftObj, params)
@@ -338,6 +357,8 @@ def fs_CPR(dataIn, dataInType, kt, df, Lx, nonCart= None, params= None):
     df_max = max(np.abs([df.max(), df.min()])) # Hz
     L = ceil(4 * df_max * 2 * pi * t_ro / pi)
     L= L * Lx
+    if len(np.unique(df)) == 1:
+        L = 1
     f_L = np.linspace(df.min(), df.max(), L + 1) # Hz
 
     # T = np.tile(params['t_vector'], (1, kt.shape[1]))
@@ -398,7 +419,7 @@ def MFI(dataIn, dataInType, kt , df, Lx , nonCart= None, params= None):
         Corrected image data.
     '''
 
-    if nonCart is not None:
+    if nonCart is not None and nonCart == 1:
         check_inputs_noncartesian(dataIn.shape, dataInType, kt.shape, df.shape, params)
         cartesian_opt = 0
         NufftObj = nufft_init(kt, params)
@@ -406,22 +427,26 @@ def MFI(dataIn, dataInType, kt , df, Lx , nonCart= None, params= None):
         T = np.tile(params['t_vector'], (1, kt.shape[1]))
         t_ro = T[-1,0] - T[0,0] # T[end] - TE
         N = params['N']
+
+    elif nonCart == 'EPI':
+        # check_inputs_cartesian(dataIn.shape, dataInType, kt.shape, df.shape)
+        cartesian_opt = 1
+        NufftObj = None
+        T = np.flipud(params['t_vector']).reshape(params['N'], params['N'])
+        T[1:params['N']:2,:] = np.fliplr(T[1:params['N']:2,:])
+        N = dataIn.shape[0]
+        t_ro = params['t_readout']
+        t_vector = params['t_vector']
+
     else:
         check_inputs_cartesian(dataIn.shape, dataInType, kt.shape, df.shape)
         cartesian_opt = 1
         NufftObj = None
         N = dataIn.shape[0]
-        #EPI case
-        #TODO: Fix this
-        if len(np.unique(kt[:,0])) > 1:
-            T = kt
-            t_ro = np.max(T[:,-1]) - np.min(T[:,0])
-            t_vector = np.linspace(T[0,0], T[0,0] + t_ro, N**2)
-        # Standard Cartesian
-        else:
-            t_vector = kt[0].reshape(kt.shape[1],1)
-            T = kt
-            t_ro = T[0, -1] - T[0,0]
+
+        t_vector = kt[0].reshape(kt.shape[1],1)
+        T = kt
+        t_ro = T[0, -1] - T[0,0]
 
     if dataInType == 'im':
         rawData = im2ksp(dataIn, cartesian_opt, NufftObj, params)
@@ -437,6 +462,8 @@ def MFI(dataIn, dataInType, kt , df, Lx , nonCart= None, params= None):
     df_range = (df.min(), df.max())
     L = ceil(df_max * 2 * pi * t_ro / pi)
     L = L * Lx
+    if len(np.unique(df)) == 1:
+        L = 1
     f_L = np.linspace(df.min(), df.max(), L + 1)  # Hz
 
     #T = np.tile(params['t_vector'], (1, kt.shape[1]))

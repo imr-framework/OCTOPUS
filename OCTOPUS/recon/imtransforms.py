@@ -120,8 +120,17 @@ def nufft_init(kt, params):
     kt_sc = pi / abs(np.max(kt))
     kt = kt * kt_sc # pyNUFFT scaling [-pi, pi]
     om = np.zeros((params['Npoints'] * params['Nshots'], 2))
-    om[:, 0] = np.real(kt).flatten()
-    om[:, 1] = np.imag(kt).flatten()
+
+    if kt.dtype == 'complex128':
+        om[:, 0] = np.real(kt).flatten()
+        om[:, 1] = np.imag(kt).flatten()
+    else:
+        om[:, 0] = kt[..., 0].flatten()
+        om[:, 1] = kt[..., 1].flatten()
+
+    # om = np.zeros((params['Npoints'] * params['Nshots'], 2))
+    # om[:, 0] = np.real(kt).flatten()
+    # om[:, 1] = np.imag(kt).flatten()
 
     NufftObj = pynufft.NUFFT_cpu()  # Create a pynufft object
     Nd = (params['N'], params['N'])  # image size

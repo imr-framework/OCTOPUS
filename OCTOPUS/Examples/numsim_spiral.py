@@ -10,11 +10,13 @@ import cv2
 import matplotlib.pyplot as plt
 from skimage.data import shepp_logan_phantom
 from skimage.transform import resize
+from skimage.segmentation import flood_fill
 
 import OCTOPUS.ORC as ORC
 import OCTOPUS.fieldmap.simulate as fieldmap_sim
 from OCTOPUS.utils.plotting import plot_correction_results
 from OCTOPUS.utils.metrics import create_table
+from OCTOPUS.recon.rawdata_recon import mask_by_threshold
 ##
 # Original image: Shep-Logan Phantom
 ##
@@ -27,10 +29,18 @@ def numsim_spiral():
     plt.colorbar()
     plt.show()
 
+    brain_mask = mask_by_threshold(ph)
+
+    # Floodfill from point (0, 0)
+    ph_holes = ~(flood_fill(brain_mask, (0, 0), 1).astype(int)) + 2
+    mask = brain_mask + ph_holes
+
+
     ##
     # Spiral k-space trajectory
     ##
     dt = 10e-6
+    # ktraj = np.load('sample_data/ktraj_sutton2003.npy')
     ktraj = np.load('sample_data/ktraj.npy') # k-space trajectory
 
     plt.plot(ktraj.real,ktraj.imag)
@@ -54,7 +64,7 @@ def numsim_spiral():
     or_corrected_MFI = np.zeros((N, N, len(fmax_v)), dtype='complex')
     for fmax  in fmax_v:
 
-        field_map = fieldmap_sim.realistic(np.abs(ph), fmax)
+        field_map = fieldmap_sim.realistic(np.abs(ph), mask, fmax)
         ### For reproducibility
         # dst = np.zeros((N, N))
         # field_map = cv2.normalize(np.load('M2.npy'), dst, -fmax, fmax, cv2.NORM_MINMAX)
@@ -70,9 +80,12 @@ def numsim_spiral():
     ##
     # Corrupted images
     ##
-        or_corrupted[:,:,i] = ORC.add_or_CPR(ph, ktraj, field_map, 1, seq_params)
-        plt.imshow(np.abs(or_corrupted[:,:,i]),cmap='gray')
+        or_corrupted[:,:,i], _ = ORC.add_or_CPR(ph, ktraj, field_map, 1, seq_params)
+        corrupt = (np.abs(or_corrupted[:,:,i]) - np.abs(or_corrupted[...,i]).min())/(np.abs(or_corrupted[:,:,i]).max() - np.abs(or_corrupted[...,i]).min())
+        #plt.imshow(np.abs(or_corrupted[:,:,i]),cmap='gray')
+        plt.imshow(corrupt, cmap='gray')
         plt.colorbar()
+        plt.title('Corrupted Image')
         plt.axis('off')
         plt.show()
 

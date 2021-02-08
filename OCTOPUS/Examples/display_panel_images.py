@@ -29,22 +29,22 @@ CPR = []
 fs_CPR = []
 MFI = []
 for path in data_paths:
-    vol_GS = read_dicom(path + 'GRE_GS_dicom.IMA')
-    vol_uncorr = np.load(path + 'uncorrected_spiral.npy')
+    vol_GS = read_dicom(path + 'GRE.dcm')
+    vol_uncorr = np.load(path + 'spiral_bc_im.npy')
     vol_CPR = np.load(path + 'corrections/CPR.npy')
     vol_fsCPR = np.load(path + 'corrections/fsCPR_Lx2.npy')
     vol_MFI = np.load(path + 'corrections/MFI_Lx2.npy')
 
 
-    sos_CPR = np.divide(np.sum(np.abs(vol_CPR), -1), np.max(np.sum(np.abs(vol_CPR), -1)))
-    sos_fsCPR = np.divide(np.sum(np.abs(vol_fsCPR), -1), np.max(np.sum(np.abs(vol_fsCPR), -1)))
-    sos_MFI = np.divide(np.sum(np.abs(vol_MFI), -1), np.max(np.sum(np.abs(vol_MFI), -1)))
+    sos_CPR = np.divide(np.sqrt(np.sum(np.abs(vol_CPR)**2, -1)), np.max(np.sqrt(np.sum(np.abs(vol_CPR)**2, -1))))
+    sos_fsCPR = np.divide(np.sqrt(np.sum(np.abs(vol_fsCPR)**2, -1)), np.max(np.sqrt(np.sum(np.abs(vol_fsCPR)**2, -1))))
+    sos_MFI = np.divide(np.sqrt(np.sum(np.abs(vol_MFI)**2, -1)), np.max(np.sqrt(np.sum(np.abs(vol_MFI)**2, -1))))
 
-    GS.append(np.rot90(vol_GS))
-    uncorrected.append(np.rot90(vol_uncorr,0))
-    CPR.append(np.rot90(sos_CPR, 0))
-    fs_CPR.append(np.rot90(sos_fsCPR, 0))
-    MFI.append(np.rot90(sos_MFI,0))
+    GS.append(np.rot90(vol_GS,0))
+    uncorrected.append(np.rot90(vol_uncorr,-1))
+    CPR.append(np.rot90(sos_CPR, -1))
+    fs_CPR.append(np.rot90(sos_fsCPR, -1))
+    MFI.append(np.rot90(sos_MFI,-1))
 
 GS = np.fliplr(np.moveaxis(np.squeeze(np.stack(GS)), 0, -1))
 uncorrected = np.fliplr(np.moveaxis(np.stack(np.squeeze(uncorrected)), 0, -1))
@@ -54,10 +54,10 @@ MFI = np.fliplr(np.moveaxis(np.stack(np.squeeze(MFI)), 0, -1))
 
 cols = ('Gold Standard','Corrupted Image','CPR Correction', 'fs-CPR Correction', 'MFI Correction')
 #rows = ('Shimmed', 'Mid-shimmed', 'Not shimmed')
-rows = ('X shim = 0',)
+rows = ('Shimmed', 'X shim = -90', 'X shim = 0')
 im_stack = np.stack((GS, uncorrected, CPR, fs_CPR, MFI))
 
 plot_correction_results(im_stack, cols, rows)
 
-cols = ('Corrupted Image','CPR Correction', 'fs-CPR Correction', 'MFI Correction')
+#cols = ('Gold Standard', 'Corrupted Image','CPR Correction', 'fs-CPR Correction', 'MFI Correction')
 #create_table(im_stack, cols, rows)

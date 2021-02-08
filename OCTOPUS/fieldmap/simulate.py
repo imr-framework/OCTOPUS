@@ -126,7 +126,7 @@ def hyperbolic(N, fmax, bin_opt = True,  bin_val= 5):
         field_map = fieldmap_bin(field_map, bin_val)
     return field_map
 
-def realistic(im , fmax , bin_opt = True, bin_val = 5):
+def realistic(im , mask, fmax , bin_opt = True, bin_val = 5):
     """
     Creates a realistic field map based on the input image
 
@@ -151,14 +151,14 @@ def realistic(im , fmax , bin_opt = True, bin_val = 5):
 
     N = im.shape[0]
     hist = np.histogram(im)
-    mask1= cv2.threshold(im, hist[1][hist[0].argmax()+1], 1, cv2.THRESH_BINARY)
+    #mask1= cv2.threshold(im, hist[1][hist[0].argmax()+1], 1, cv2.THRESH_BINARY)
     #mask2 = cv2.threshold(im, hist[1][hist[0].argmax()], 1, cv2.THRESH_BINARY_INV)
-    mask = mask1[1] #+ mask2[1]
+    #mask = mask1[1] #+ mask2[1]
+    mask = mask
 
     np.random.seed(123)
     M = np.random.rand(2, 2)
     M2 = cv2.resize(M, (N, N))
-
 
     dst = np.zeros(M2.shape)
     field_map = cv2.normalize(M2, dst, -fmax, fmax, cv2.NORM_MINMAX) * mask
