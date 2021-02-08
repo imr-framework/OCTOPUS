@@ -57,7 +57,7 @@ MFI  works in a similar way as frequency-segmented CPR, with main differences be
 requires a smaller number of base images (L) and that these images are added together into the corrected image using a set of
 linear coefficients derived from the field map. 
 
-One can find limited off-resonance correction capabilities within
+One can find optimised off-resonance correction capabilities within
 existing packages. Examples are: SPIRiT [@Lustig2010], a MATLAB-based
 approach for auto-calibrated parallel imaging reconstruction; Ostenson's
 MFI implementation for Magnetic Resonance Fingerprinting (MRF)
@@ -97,45 +97,38 @@ The expected output is an image with recovered, sharper edges and undistorted sh
 
 Also, `OCTOPUS` corrects off-resonance independently of the trajectory used to acquire the data being Cartesian or non-Cartesian. 
 The input of the correction methods could be either image or raw data, although using raw data is more efficient
-and may avoid trajectory-dependent artifacts in the case of non-cartesian data.
+and may avoid trajectory-dependent artifacts in the case of non-cartesian data. `OCTOPUS` is also able to correct 3D multi-slice and multi-channel data by feeding it to the tool in a slice and channel-wise manner and then applying channel combination with the user's method of choice.
 
 At the current stage, the software limitations include: correction restricted to data two-dimensionally acquired in the absence of 
 acceleration techniques; long correction times for large datasets and degraded correction quality in the presence of highly-inhomogeneous
-fields. Additionally, the tool has been only tested on Cartesian and spiral data.
+fields. Additionally, the tool has been only tested on Cartesian, EPI and spiral data.
 
 # Short demo
 To illustrate the usage of the package we performed in silico numerical
-simulations using a Cartesian trajectory, a spiral trajectory and a
+simulations using a single-shot EPI trajectory, a single-shot spiral trajectory and a
 simulated field map. For these experiments we used a Shepp-Logan head phantom, widely used
-to test reconstruction algorithms [@Gonzalez2001].  The steps were:
+to test reconstruction algorithms [@Gonzalez2001]. Figure 1 shows all inputs and outputs of the experiment. The steps were:
 
-1. Forward model simulation of off-resonance effect on a 192x192
-   Shepp-Logan phantom (Figure 1.A).
+1. Forward model simulation of off-resonance effect on a 128x128
+   Shepp-Logan phantom and 256 mm<sup>2</sup> FOV.
 
-   + Using a Cartesian trajectory (Figure 1.B) and a simulated field map
-     (Figure 1.D) with frequency ranges of -/+ 1600, -/+3200 and -/+4800
-     Hz.
+   + Using single-shot EPI and spiral trajectories. Figure 1 shows simplified versions of both trajectories for visualization purposes.
 
-   + Using a spiral trajectory (Figure 1.C) and a simulated field map
-     (Figure 1.D) with frequency ranges of -/+ 250, -/+ 500 and -/+ 750
-     Hz.
+   + Using a  simulated field map based on a blurred version of the phantom image with frequency ranges of -/+ 100, -/+150 and -/+200 Hz.
 
-2. Correction of the results of the forward model (Figure 1.E and Figure
-   1.F, first column) with CPR, fs-CPR and MFI (Figure 1.E and Figure
-   1.F, second-fourth columns).
+2. Correction of the results of the forward model with CPR, fs-CPR and MFI .
 
-![Figure 1: A) Shepp-Logan phantom image (192x192). B) Cartesian k-space trajectory. C) Spiral k-space trajectory. D) Simulated field map (192x192). E) Cartesian experiment results. F) Spiral experiment results.](JOSS_figs/FIG1_3_copy.png)
+![Figure 1: Top row (left-right): Shepp-Logan phantom image (128x128), Simplified single-shot EPI k-space trajectory, Simplified single-shot spiral k-space trajectory, and simulated field map (128x128). Bottom row (left-right): EPI experiment results and Spiral experiment results.](JOSS_figs/simfig.png)
 
 In both sets of experiments, 'OCTOPUS' has successfully corrected the
-off-resonance induced blurring and/or geometrical distortion. Note that
-spiral and reconstruction-related artifacts are still present in the
-spiral simulated images.
+off-resonance induced blurring and/or geometrical distortion. Note how the EPI corrupted images show geometric distortion in the phase-encode direction while spiral corrupted images show blurred and distorted edges.
 
-To test the effect of noise on the correction performance we introduced different levels of noise and measured the peak signal-to-noise ratio (pSNR) and Structural Similarity Index (SSIM).
+To test the effect of noise on the correction performance we introduced different levels of noise to a Cartesian trajectory-based simulation and measured the peak signal-to-noise ratio (pSNR) and Structural Similarity Index (SSIM). We increased the off-resonance range of the field maps for this experiment to observe significant distortion in the Cartesian images, which are not as prone to off-resonance due to their extremely short readout periods.
 ![Effect of different noise leves on OCTOPUS correction performance measured using pSNR and SSIM.](JOSS_figs/noise_sim.png)
 As expected, pSNR and SSIM are reduced as the off-resonance range widens and the noise level in the original image increases. Nevertheless, in all cases, the three implemented methods improve the metrics with respect to the off-resonance corrupted image.
 
-
+Finally, to demonstrate the correction capabilities in 3D multi-slice and multi-channel data, we corrected phantom images of a Stack-of-Spirals acquisition with N=72, FOV=240mm<sup>2</sup> and 54 slices. The images were acquired on a Siemens 3T Prisma scanner using a 20-channel head coil. Figure 3 shows three representative slices and their off-resonance corrected versions. The regions of the images highlighted in red show improved image quality and enhaced edges.
+![Off-resonance correction of three slices of a Stack-of-Spirals 3D acquisition.](JOSS_figs/SoS_ORC.png)
 # Acknowledgements
 
 This study was funded (in part) by the 'MR Technology Development Grant'
