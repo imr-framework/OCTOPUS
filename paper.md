@@ -5,7 +5,7 @@ tags:
   - MRI
   - off-resonance correction
 authors:
-  - name: Marina Manso Jimeno
+  - name: Marina Manso-Jimeno
     orcid: 0000-0002-1141-2049
     affiliation: "1, 2"
   - name: John Thomas Vaughan Jr.
