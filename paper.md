@@ -126,6 +126,7 @@ off-resonance induced blurring and/or geometrical distortion. Note how the EPI c
 To test the effect of noise on the correction performance we introduced different levels of noise to a Cartesian trajectory-based simulation and measured the peak signal-to-noise ratio (pSNR) and Structural Similarity Index (SSIM). We increased the off-resonance range of the field maps for this experiment to observe significant distortion in the Cartesian images, which are not as prone to off-resonance due to their extremely short readout periods.
 
 ![Figure 2: Effect of different noise leves on OCTOPUS correction performance measured using pSNR and SSIM.](JOSS_figs/noise_sim.png)
+
 As expected, PSNR and SSIM are reduced as the off-resonance range widens and the noise level in the original image increases. Nevertheless, in all cases, the three implemented methods improve the metrics with respect to the off-resonance corrupted image.
 
 Finally, to demonstrate the correction capabilities in 3D multi-slice and multi-channel data, we corrected phantom images of a Stack-of-Spirals acquisition with matrix size of 72x72, FOV=240 mm<sup>2</sup> and 54 slices. The images were acquired on a Siemens 3T Prisma scanner using a 20-channel head coil. Figure 3 shows three representative slices and their off-resonance corrected versions. The regions of the images highlighted in red show improved image quality and enhaced edges.
