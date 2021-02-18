@@ -125,7 +125,7 @@ off-resonance induced blurring and/or geometrical distortion. Note how the EPI c
 
 To test the effect of noise on the correction performance we introduced different levels of noise to a single-shot EPI trajectory-based simulation and measured the peak signal-to-noise ratio (pSNR) and Structural Similarity Index (SSIM). 
 
-![Effect of different noise leves on OCTOPUS correction performance measured using pSNR and SSIM.](JOSS_figs/noise_sim_EPI.png)
+![Effect of different noise leves on OCTOPUS correction performance measured using pSNR and SSIM.](JOSS_figs/noise_sim_epi.png)
 
 As expected, PSNR and SSIM are reduced as the off-resonance range widens and the noise level in the original image increases. Nevertheless, in all cases, the three implemented methods improve the metrics with respect to the off-resonance corrupted image.
 
