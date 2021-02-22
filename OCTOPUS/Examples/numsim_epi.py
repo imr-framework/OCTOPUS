@@ -6,10 +6,13 @@ Last updated: 01/19/2021
 '''
 import numpy as np
 import matplotlib.pyplot as plt
+import cv2
 
 from skimage.data import shepp_logan_phantom
 from skimage.transform import resize
 from skimage.segmentation import flood_fill
+from skimage.util import img_as_float, random_noise
+from skimage.filters import gaussian
 
 import OCTOPUS.ORC as ORC
 import OCTOPUS.fieldmap.simulate as fieldmap_sim
@@ -50,9 +53,9 @@ def numsim_epi():
     ##
     # Original image: Shep-Logan Phantom
     ##
-    N = 192
-    FOV = 384e-3
-    ph = resize(shepp_logan_phantom(), (N,N)).astype(complex)
+    N = 128
+    FOV = 256e-3
+    ph = resize(shepp_logan_phantom(), (N,N))#.astype(complex)
     plt.imshow(np.abs(ph), cmap='gray')
     plt.title('Original phantom')
     plt.axis('off')
@@ -68,7 +71,7 @@ def numsim_epi():
     ##
     # EPI k-space trajectory
     ##
-    dt = 10e-6
+    dt = 4e-6
     ktraj = ssEPI_2d(N, FOV)  # k-space trajectory
 
     plt.plot(ktraj[:,0], ktraj[:,1])
@@ -83,7 +86,8 @@ def numsim_epi():
     ##
     # Simulated field map
     ##
-    fmax_v = [50, 75, 100]  # Hz
+    # fmax_v = [50, 75, 100]  # Hz
+    fmax_v = [100, 150, 200]
     
     i = 0
     or_corrupted = np.zeros((N, N, len(fmax_v)), dtype='complex')
@@ -91,8 +95,13 @@ def numsim_epi():
     or_corrected_fsCPR = np.zeros((N, N, len(fmax_v)), dtype='complex')
     or_corrected_MFI = np.zeros((N, N, len(fmax_v)), dtype='complex')
     for fmax in fmax_v:
-        field_map = fieldmap_sim.realistic(np.abs(ph), mask, fmax)
-        
+        # field_map = fieldmap_sim.realistic(np.abs(ph), mask, fmax)
+
+        SL_smooth = gaussian(ph, sigma=3)
+        field_map = cv2.normalize(SL_smooth, None, -fmax, fmax, cv2.NORM_MINMAX)
+        field_map = np.round(field_map * mask)
+        field_map[np.where(field_map == -0.0)] = 0
+
         plt.imshow(field_map, cmap='gray')
         plt.title('Field Map +/-' + str(fmax) + ' Hz')
         plt.colorbar()
@@ -102,7 +111,7 @@ def numsim_epi():
         ##
         # Corrupted images
         ##
-        or_corrupted[:, :, i], _ = ORC.add_or_CPR(ph, ktraj, field_map, 'EPI', seq_params)
+        or_corrupted[:, :, i], EPI_ksp = ORC.add_or_CPR(ph, ktraj, field_map, 'EPI', seq_params)
         corrupt = (np.abs(or_corrupted[:, :, i]) - np.abs(or_corrupted[..., i]).min()) / (
                     np.abs(or_corrupted[:, :, i]).max() - np.abs(or_corrupted[..., i]).min())
         # plt.imshow(np.abs(or_corrupted[:,:,i]),cmap='gray')
@@ -115,11 +124,17 @@ def numsim_epi():
         ###
         # Corrected images
         ###
-        or_corrected_CPR[:, :, i] = ORC.CPR(or_corrupted[:, :, i], 'im', ktraj, field_map, 'EPI', seq_params)
+        or_corrected_CPR[:, :, i] = ORC.correct_from_kdat('CPR', EPI_ksp, ktraj, field_map, seq_params,
+                                                         'EPI')
+        or_corrected_fsCPR[:,:,i] = ORC.correct_from_kdat('fsCPR', EPI_ksp, ktraj, field_map, seq_params, 'EPI')
+        or_corrected_MFI[:, :, i] = ORC.correct_from_kdat('MFI', EPI_ksp, ktraj, field_map,
+                                                            seq_params, 'EPI')
 
-        or_corrected_fsCPR[:, :, i] = ORC.fs_CPR(or_corrupted[:, :, i], 'im', ktraj, field_map, 2, 'EPI', seq_params)
-
-        or_corrected_MFI[:, :, i] = ORC.MFI(or_corrupted[:, :, i], 'im', ktraj, field_map, 2, 'EPI', seq_params)
+        # or_corrected_CPR[:, :, i] = ORC.CPR(or_corrupted[:, :, i], 'im', ktraj, field_map, 'EPI', seq_params)
+        #
+        # or_corrected_fsCPR[:, :, i] = ORC.fs_CPR(or_corrupted[:, :, i], 'im', ktraj, field_map, 2, 'EPI', seq_params)
+        #
+        # or_corrected_MFI[:, :, i] = ORC.MFI(or_corrupted[:, :, i], 'im', ktraj, field_map, 2, 'EPI', seq_params)
 
         i += 1
 
@@ -130,7 +145,7 @@ def numsim_epi():
                          np.squeeze(or_corrected_MFI)))
     # np.save('im_stack.npy',im_stack)
     cols = ('Corrupted Image', 'CPR Correction', 'fs-CPR Correction', 'MFI Correction')
-    row_names = ('-/+ 250 Hz', '-/+ 500 Hz', '-/+ 750 Hz')
+    row_names = ('-/+ 100 Hz', '-/+ 150 Hz', '-/+ 200 Hz')
     plot_correction_results(im_stack, cols, row_names)
 if __name__ == "__main__":
     numsim_epi()

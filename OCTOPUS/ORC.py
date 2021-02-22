@@ -553,3 +553,40 @@ def coeffs_MFI_lsq(kt, f_L, df_range, t_vector):
         cL[str(fs)] = C[0][:].reshape((f_L.shape[0]))
 
     return cL
+
+def correct_from_kdat(method,kdat,ktraj,fmap,params,cart_opt):
+    '''
+    Corrects numerical simulation data directly from k-space data to avoid artifacts from ksp-im and im-ksp conversion.
+
+    Parameters
+    ----------
+    method: str
+        Correction method to apply: CPR, fsCPR or MFI
+    kdat: numpy.ndarray
+        Corrupted k-space data
+    ktraj: numpy.ndarray
+        k-space trajectory
+    fmap: numpy.ndarray
+        Field map in Hertz
+    params: dict
+        Sequence acquisition parameters
+    cart_opt:
+        Cartesian option: 1 (spiral), 'EPI'
+
+    Returns
+    -------
+    M_corr: numpy.ndarray
+        Corrected image
+    '''
+    df_values = np.unique(fmap)
+    M_corr = np.zeros((params['N'], params['N']), dtype=complex)
+    for i in range(len(df_values)):
+        if method == 'CPR':
+            M_corr_i = CPR(kdat[...,i], 'raw', ktraj, df_values[i] * np.ones(fmap.shape), cart_opt, params)
+        elif method == 'fsCPR':
+            M_corr_i = fs_CPR(kdat[..., i], 'raw', ktraj, df_values[i] * np.ones(fmap.shape), 1, cart_opt, params)
+        elif method == 'MFI':
+            M_corr_i = MFI(kdat[..., i], 'raw', ktraj, df_values[i] * np.ones(fmap.shape), 1, cart_opt, params)
+
+        M_corr[np.where(fmap == df_values[i])] = M_corr_i[np.where(fmap == df_values[i])]
+    return M_corr
